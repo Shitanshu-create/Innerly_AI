@@ -1,0 +1,442 @@
+.writing-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.26) transparent;
+}
+
+.writing-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.writing-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.writing-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.24);
+  border-radius: 999px;
+}
+
+.writing-page-container {
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: #101010;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  color: #ffffff;
+}
+
+.writing-flex-wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+.writing-section {
+  min-height: 100vh;
+  min-width: 0;
+  flex: 1 1 0%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  transition: margin 300ms ease;
+}
+
+@media (min-width: 640px) {
+  .writing-section {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .writing-section {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .writing-section.sidebar-open {
+    margin-left: 260px;
+  }
+  .writing-section.sidebar-closed {
+    margin-left: 0;
+  }
+}
+
+.writing-content {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+  padding-right: 0.25rem;
+  transition: max-width 300ms ease;
+}
+
+.writing-content.content-sidebar-open {
+  max-width: none;
+}
+
+.writing-content.content-sidebar-closed {
+  max-width: 64rem;
+}
+
+@media (min-width: 1024px) {
+  .writing-content.content-sidebar-closed {
+    width: 75vw;
+  }
+}
+
+.writing-top-actions {
+  min-height: 1rem;
+}
+
+@media (min-width: 640px) {
+  .writing-top-actions {
+    min-height: 1.25rem;
+  }
+}
+
+.ai-status-badge {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 900;
+}
+
+.ai-icon-active {
+  color: #25D366;
+}
+
+.ai-icon-inactive {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.writing-label {
+  margin-bottom: 0.75rem;
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.writing-title-input {
+  margin-bottom: 1rem;
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #ffffff;
+  outline: none;
+  transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.writing-title-input::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.writing-title-input:focus {
+  color: #FFE45E;
+}
+
+@media (min-width: 640px) {
+  .writing-title-input {
+    font-size: 1.875rem;
+  }
+}
+
+.writing-editor {
+  min-height: 48vh;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  background-color: transparent;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.625;
+  color: #ffffff;
+  outline: none;
+  transition: border-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-sizing: border-box;
+}
+
+.writing-editor .ProseMirror {
+  min-height: calc(48vh - 2rem);
+  outline: none;
+  line-height: 1.7;
+}
+
+.writing-editor .ProseMirror p {
+  margin: 0 0 0.5rem;
+}
+
+.writing-editor .ProseMirror mark {
+  background-color: #FFE45E;
+  border-radius: 2px;
+  color: #050505;
+  padding: 0 2px;
+}
+
+.writing-editor .ProseMirror strong {
+  font-weight: 900;
+}
+
+.writing-editor .ProseMirror em {
+  font-style: italic;
+}
+
+.writing-editor .ProseMirror p.is-editor-empty:first-child::before {
+  pointer-events: none;
+  color: rgba(255, 255, 255, 0.25);
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+}
+
+@media (min-width: 640px) {
+  .writing-editor {
+    min-height: 56vh;
+  }
+
+  .writing-editor .ProseMirror {
+    min-height: calc(56vh - 2rem);
+  }
+}
+
+.writing-media-container {
+  margin-top: 0.75rem;
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 0.75rem;
+  border-radius: 1rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 0.5rem;
+}
+
+.writing-media-frame {
+  display: grid;
+  height: 6rem;
+  width: 9rem;
+  flex-shrink: 0;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.writing-media-element {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.writing-canary-text {
+  color: #FFE45E;
+}
+
+.writing-dim-text {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.writing-audio-player {
+  width: 12rem;
+}
+
+.writing-media-remove-btn {
+  display: grid;
+  height: 2.25rem;
+  width: 2.25rem;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 9999px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.writing-media-remove-btn:hover {
+  background-color: #FF7A90;
+}
+
+.writing-toolbar {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.writing-format-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.writing-format-btn {
+  display: grid;
+  height: 2.5rem;
+  width: 2.5rem;
+  place-items: center;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.writing-format-btn-active {
+  background-color: #FFE45E;
+  color: #101010;
+}
+
+.writing-format-btn-inactive {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+.writing-format-btn-inactive:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.writing-actions-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.writing-hidden {
+  display: none;
+}
+
+.writing-btn-media {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 900;
+  color: #ffffff;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.writing-btn-media:hover {
+  background-color: #2458FF;
+}
+
+.writing-btn-ai {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 900;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.writing-btn-ai-active {
+  background-color: #25D366;
+  color: #101010;
+}
+
+.writing-btn-ai-inactive {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+.writing-btn-save {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  background-color: #0B63F6;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 900;
+  color: #ffffff;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.writing-btn-save:hover {
+  transform: translateY(-0.125rem);
+  background-color: #2458FF;
+}
+
+.writing-btn-delete {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  padding: 0.625rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 900;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.writing-btn-delete {
+  background-color: rgba(255, 122, 144, 0.18);
+  color: #FF9AAD;
+}
+
+.writing-btn-delete:hover {
+  transform: translateY(-0.125rem);
+}
+
+.writing-btn-delete:hover {
+  background-color: #FF7A90;
+  color: #101010;
+}
+
+.writing-btn-delete:disabled,
+.writing-btn-save:disabled,
+.writing-btn-delete-icon:disabled,
+.writing-format-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+  transform: none;
+}
+
+.writing-btn-delete-icon {
+  display: grid;
+  height: 2.5rem;
+  width: 2.5rem;
+  place-items: center;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  background-color: rgba(255, 122, 144, 0.18);
+  color: #FF9AAD;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1), transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.writing-btn-delete-icon:hover {
+  transform: translateY(-0.125rem);
+  background-color: #FF7A90;
+  color: #101010;
+}
