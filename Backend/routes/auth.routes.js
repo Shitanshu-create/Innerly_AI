@@ -1,6 +1,8 @@
 import express from "express";
 import authController from "../controllers/auth.controller.js";
 import authMiddleware from "../middlewares/auth.middleware.js";
+import { validateBody } from "../middlewares/validate.middleware.js";
+import { loginSchema, registerSchema } from "../validations/auth.validation.js";
 
 const authRouter = express.Router();
 
@@ -9,14 +11,14 @@ const authRouter = express.Router();
  * @desc Register a new user
  * @access Public
  */
-authRouter.post("/register", authController.registerUserController);
+authRouter.post("/register", validateBody(registerSchema), authController.registerUserController);
 
 /**
  * @route POST /api/auth/login
  * @desc Login a user
  * @access Public
  */
-authRouter.post("/login", authController.loginUserController);
+authRouter.post("/login", validateBody(loginSchema), authController.loginUserController);
 
 /**
  * @route GET /api/auth/logout

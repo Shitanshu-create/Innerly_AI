@@ -2,6 +2,13 @@ import express from "express";
 import authMiddleware from "../middlewares/auth.middleware.js";
 import journalController from "../controllers/journal.controller.js";
 import chatController from "../controllers/chat.controller.js";
+import { validateBody, validateParams } from "../middlewares/validate.middleware.js";
+import {
+    chatSchema,
+    idParamSchema,
+    journalEntrySchema,
+    journalUpdateSchema
+} from "../validations/journal.validation.js";
 
 
 const journalRouter = express.Router();
@@ -11,14 +18,14 @@ const journalRouter = express.Router();
  * @description Chat with the AI companion using journal context
  * @access Private
  */
-journalRouter.post("/chat", authMiddleware.authUser, chatController.chatWithAI);
+journalRouter.post("/chat", authMiddleware.authUser, validateBody(chatSchema), chatController.chatWithAI);
 
 /**
  * @route POST /api/journal
  * @description Generate a journal report based on the provided journal entry.
  * @access Private
  */
-journalRouter.post("/", authMiddleware.authUser, journalController.generateJournalReportController);
+journalRouter.post("/", authMiddleware.authUser, validateBody(journalEntrySchema), journalController.generateJournalReportController);
 
 /**
  * @route GET /api/journal
@@ -46,13 +53,13 @@ journalRouter.get("/observations", authMiddleware.authUser, journalController.ge
  * @description Modify an existing journal entry
  * @access Private
  */
-journalRouter.put("/:id", authMiddleware.authUser, journalController.modifyJournalController);
+journalRouter.put("/:id", authMiddleware.authUser, validateParams(idParamSchema), validateBody(journalUpdateSchema), journalController.modifyJournalController);
 
 /**
  * @route DELETE /api/journal/:id
  * @description Delete a journal entry
  * @access Private
  */
-journalRouter.delete("/:id", authMiddleware.authUser, journalController.deleteJournalController);
+journalRouter.delete("/:id", authMiddleware.authUser, validateParams(idParamSchema), journalController.deleteJournalController);
 
 export default journalRouter;

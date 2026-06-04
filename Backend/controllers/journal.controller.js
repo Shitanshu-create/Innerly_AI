@@ -2,6 +2,7 @@ import generateJournalReport, { generateGlobalInsights } from "../services/journ
 import journalReportModel from "../models/journalReport.model.js";
 import UserStats from "../models/userStats.model.js";
 import InsightsCache from "../models/insightsCache.model.js";
+import { recalculateUserStats } from "../services/stats.service.js";
 
 /**
  * @desc Generate a journal report based on the provided journal entry.
@@ -13,9 +14,10 @@ async function generateJournalReportController(req, res) {
         }
 
         let journalReportByAi;
+        const isPrivate = req.body.aiActive === false;
 
         /* If AI is disabled by the user, skip the Gemini API call to preserve privacy */
-        if (req.body.aiActive === false) {
+        if (isPrivate) {
             journalReportByAi = {
                 reflection: ["Private Entry - AI Analysis disabled"],
                 gemini_response: {
@@ -55,55 +57,12 @@ async function generateJournalReportController(req, res) {
             title: req.body.title || "Untethered Thoughts",
             reflection: journalReportByAi.reflection,
             media: media,
+            isPrivate,
             gemini_response: journalReportByAi.gemini_response
         });
 
-        /* --- UPDATE USER STATS --- */
-        const wordCount = req.body.chat.trim().split(/\s+/).length;
-        const aiResp = journalReportByAi.gemini_response;
-        const entryAvgMood = ((aiResp.calmness_score || 0) + (aiResp.anxious_score || 0) + (aiResp.productivity_score || 0) + (aiResp.sadness_score || 0) + (aiResp.happiness_score || 0)) / 5;
-
-        // Find or create UserStats
-        let stats = await UserStats.findOne({ userId: req.user.Id });
-        if (!stats) {
-            stats = new UserStats({ userId: req.user.Id });
-        }
-
-        const now = new Date();
-        const todayStr = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
-        
-        let lastEntryStr = null;
-        if (stats.lastEntryDate) {
-            const d = new Date(stats.lastEntryDate);
-            lastEntryStr = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
-        }
-
-        // Streak logic
-        if (lastEntryStr !== todayStr) {
-            // New day entry
-            const yesterdayDate = new Date(now);
-            yesterdayDate.setDate(yesterdayDate.getDate() - 1);
-            const yesterdayStr = `${yesterdayDate.getFullYear()}-${yesterdayDate.getMonth()}-${yesterdayDate.getDate()}`;
-
-            if (lastEntryStr === yesterdayStr) {
-                stats.currentStreak += 1;
-            } else {
-                stats.currentStreak = 1;
-            }
-            stats.longestStreak = Math.max(stats.longestStreak, stats.currentStreak);
-        }
-
-        // Rolling average logic for mood
-        const newTotalEntries = stats.totalEntries + 1;
-        const newAvgMood = ((stats.avgMoodScore * stats.totalEntries) + entryAvgMood) / newTotalEntries;
-
-        stats.totalEntries = newTotalEntries;
-        stats.totalWords += wordCount;
-        stats.avgMoodScore = newAvgMood;
-        stats.lastEntryDate = now;
-
-        await stats.save();
-        /* --- END UPDATE USER STATS --- */
+        await InsightsCache.deleteOne({ userId: req.user.Id });
+        await recalculateUserStats(req.user.Id);
 
         res.status(201).json({
             message: "Journal report generated successfully",
@@ -182,19 +141,30 @@ async function getGlobalInsightsController(req, res) {
         const cachedInsights = await InsightsCache.findOne({ userId });
         const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 Hours
 
-        if (cachedInsights && (Date.now() - new Date(cachedInsights.lastGenerated).getTime() < CACHE_DURATION)) {
+        if (
+            cachedInsights
+            && cachedInsights.privacyVersion === 1
+            && (Date.now() - new Date(cachedInsights.lastGenerated).getTime() < CACHE_DURATION)
+        ) {
             return res.status(200).json({
                 message: "Insights retrieved from cache",
                 insights: cachedInsights.data
             });
         }
 
-        // 2. No Cache or Expired - Fetch Last 15 Entries
-        const entries = await journalReportModel.find({ userId })
+        // 2. No Cache or Expired - Fetch Last 15 AI-allowed Entries
+        const entries = await journalReportModel.find({ userId, isPrivate: { $ne: true } })
             .sort({ date: -1 })
             .limit(15);
 
-        if (entries.length < 3) {
+        const filteredEntries = entries.filter((en) => {
+            if (en.reflection && en.reflection.some((reflection) => reflection.includes("Private Entry"))) {
+                return false;
+            }
+            return true;
+        });
+
+        if (filteredEntries.length < 3) {
             return res.status(200).json({
                 message: "Not enough entries for deep analysis yet",
                 insights: { observations: [], advices: [], themes: [] }
@@ -202,25 +172,23 @@ async function getGlobalInsightsController(req, res) {
         }
 
         // 3. Prepare text for AI
-        const entriesText = entries.map((en, i) => {
+        const entriesText = filteredEntries.map((en, i) => {
             return `Entry ${i+1} (${en.date.toDateString()}):\nTitle: ${en.title}\nContent: ${en.chat}\nReflections: ${en.reflection.join(', ')}`;
         }).join('\n\n---\n\n');
 
         // 4. Generate New Insights
         const insights = await generateGlobalInsights({ entriesText });
 
-        // 5. Update/Save Cache
-        if (cachedInsights) {
-            cachedInsights.data = insights;
-            cachedInsights.lastGenerated = Date.now();
-            await cachedInsights.save();
-        } else {
-            await InsightsCache.create({
-                userId,
+        // 5. Update/Save Cache atomically to avoid duplicate-key races
+        await InsightsCache.findOneAndUpdate(
+            { userId },
+            {
                 data: insights,
-                lastGenerated: Date.now()
-            });
-        }
+                lastGenerated: Date.now(),
+                privacyVersion: 1
+            },
+            { upsert: true, new: true, setDefaultsOnInsert: true }
+        );
         
         res.status(200).json({
             message: "Insights generated successfully",
@@ -245,6 +213,9 @@ async function deleteJournalController(req, res) {
         if (!entry) {
             return res.status(404).json({ message: "Journal entry not found or unauthorized to delete." });
         }
+
+        await InsightsCache.deleteOne({ userId: req.user.Id });
+        await recalculateUserStats(req.user.Id);
         
         res.status(200).json({ message: "Journal entry deleted successfully" });
     } catch (error) {
@@ -272,9 +243,10 @@ async function modifyJournalController(req, res) {
         }
 
         let journalReportByAi;
+        const isPrivate = aiActive === false;
         
         /* If AI is disabled by the user, skip the Gemini API call */
-        if (aiActive === false) {
+        if (isPrivate) {
             journalReportByAi = {
                 reflection: ["Private Entry - AI Analysis disabled"],
                 gemini_response: {
@@ -293,8 +265,11 @@ async function modifyJournalController(req, res) {
         if (title) existingEntry.title = title;
         existingEntry.reflection = journalReportByAi.reflection;
         existingEntry.gemini_response = journalReportByAi.gemini_response;
+        existingEntry.isPrivate = isPrivate;
 
         await existingEntry.save();
+        await InsightsCache.deleteOne({ userId: req.user.Id });
+        await recalculateUserStats(req.user.Id);
 
         res.status(200).json({
             message: "Journal modified successfully",

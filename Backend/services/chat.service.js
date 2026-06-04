@@ -1,5 +1,6 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import journalReportModel from "../models/journalReport.model.js";
+import env from "../config/env.js";
 
 /* ── Response schema for structured chat replies ── */
 const chatResponseSchema = {
@@ -31,28 +32,39 @@ function buildJournalContext(entries) {
         return "The user has not written any journal entries yet. Encourage them to start journaling and offer general mental health and wellness guidance.";
     }
 
-    const summaries = entries.map((entry, idx) => {
-        const date = new Date(entry.date).toLocaleDateString('en-US', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-        const mood = entry.gemini_response;
-        const moodStr = mood
-            ? `Calmness: ${mood.calmness_score}/10, Anxiety: ${mood.anxious_score}/10, Productivity: ${mood.productivity_score}/10, Sadness: ${mood.sadness_score}/10, Happiness: ${mood.happiness_score}/10`
-            : 'No mood data';
-        const reflections = entry.reflection && entry.reflection.length > 0
-            ? entry.reflection.join('; ')
-            : 'No reflections';
+    const summaries = entries
+        .filter((entry) => {
+            if (entry.reflection && entry.reflection.some((reflection) => reflection.includes("Private Entry"))) {
+                return false;
+            }
+            return true;
+        })
+        .map((entry, idx) => {
+            const date = new Date(entry.date).toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            const mood = entry.gemini_response;
+            const moodStr = mood
+                ? `Calmness: ${mood.calmness_score}/10, Anxiety: ${mood.anxious_score}/10, Productivity: ${mood.productivity_score}/10, Sadness: ${mood.sadness_score}/10, Happiness: ${mood.happiness_score}/10`
+                : 'No mood data';
+            const reflections = entry.reflection && entry.reflection.length > 0
+                ? entry.reflection.join('; ')
+                : 'No reflections';
 
-        return `--- Entry ${idx + 1} ---
+            return `--- Entry ${idx + 1} ---
 Date: ${date}
 Title: ${entry.title}
 Mood Scores: ${moodStr}
 Key Reflections: ${reflections}
 Full Text: ${entry.chat}`;
-    });
+        });
+
+    if (summaries.length === 0) {
+        return "The user has not written any AI-accessible journal entries yet. Offer general mental health and wellness guidance without referencing private entries.";
+    }
 
     return `Here are the user's recent journal entries (most recent first):\n\n${summaries.join('\n\n')}`;
 }
@@ -65,11 +77,11 @@ Full Text: ${entry.chat}`;
  */
 async function chatWithJournalContext({ userId, message, conversationHistory = [] }) {
     const ai = new GoogleGenAI({
-        apiKey: process.env.GOOGLE_GENAI_API_KEY,
+        apiKey: env.googleGenAiApiKey,
     });
 
-    /* Fetch last 15 entries for context */
-    const entries = await journalReportModel.find({ userId })
+    /* Fetch only AI-allowed entries for context */
+    const entries = await journalReportModel.find({ userId, isPrivate: { $ne: true } })
         .sort({ date: -1 })
         .limit(15)
         .select('date title chat reflection gemini_response');
@@ -117,7 +129,7 @@ ${journalContext}`;
     fullPrompt += `User: ${message}\n\nNow respond as Innerly to the user's latest message above.`;
 
     const response = await ai.models.generateContent({
-        model: "gemini-3.1-flash-lite-preview",
+        model: env.geminiModel,
         contents: fullPrompt,
         config: {
             responseMimeType: "application/json",

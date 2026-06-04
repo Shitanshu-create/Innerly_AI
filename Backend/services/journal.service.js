@@ -1,4 +1,5 @@
 import { GoogleGenAI, Type } from "@google/genai";
+import env from "../config/env.js";
 
 const journalEntrySchema = {
     type: Type.OBJECT,
@@ -101,13 +102,13 @@ const insightsSchema = {
 async function generateJournalReport({ chat }) {
 
     const ai = new GoogleGenAI({
-        apiKey: process.env.GOOGLE_GENAI_API_KEY,
+        apiKey: env.googleGenAiApiKey,
     });
 
     const prompt = `Analyze the following journal entry and provide a structured response:\n\n${chat}`;
 
     const response = await ai.models.generateContent({
-        model: "gemini-3.1-flash-lite-preview",
+        model: env.geminiModel,
         contents: prompt,
         config: {
             responseMimeType: "application/json",
@@ -123,14 +124,14 @@ async function generateJournalReport({ chat }) {
 
 async function generateGlobalInsights({ entriesText }) {
     const ai = new GoogleGenAI({
-        apiKey: process.env.GOOGLE_GENAI_API_KEY,
+        apiKey: env.googleGenAiApiKey,
     });
 
     const prompt = `Act as an expert psychological and productivity analyst. Analyze the following sequence of the user's last 15 journal entries. 
 Provide exactly 4 high-level observations, exactly 4 actionable productivity/wellness advices, and 8-10 recurring free-form themes. Look for multi-day aggregate trends, recurring narratives, hidden emotional loops, or behavioral rhythms. Do not summarize individual days; focus on the "big picture" of who this person is and how their patterns correlate with their outcomes. Themes should be specific and free-form based on their actual content.\n\n${entriesText}`;
 
     const response = await ai.models.generateContent({
-        model: "gemini-3.1-flash-lite-preview",
+        model: env.geminiModel,
         contents: prompt,
         config: {
             responseMimeType: "application/json",

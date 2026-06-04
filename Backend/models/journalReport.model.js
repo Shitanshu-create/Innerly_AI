@@ -54,6 +54,11 @@ const journalReportSchema = new mongoose.Schema({
         contentType: String,
         filename: String
     }],
+    isPrivate: {
+        type: Boolean,
+        default: false,
+        index: true
+    },
 
     gemini_response: {
         type: geminiResponseSchema,

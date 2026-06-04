@@ -14,6 +14,10 @@ const insightsCacheSchema = new mongoose.Schema({
     lastGenerated: {
         type: Date,
         default: Date.now
+    },
+    privacyVersion: {
+        type: Number,
+        default: 1
     }
 }, {
     timestamps: true
