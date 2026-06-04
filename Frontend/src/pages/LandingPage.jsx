@@ -424,7 +424,7 @@ function LandingPage({ isLoggedIn }) {
       <footer className="landing-footer">
         <div className="landing-footer-inner">
           <p className="landing-footer-brand">Innerly</p>
-          <p className="landing-footer-copy">Built by Team Rocket for Hacknovate 7.0.</p>
+          <p className="landing-footer-copy">Built by Team Rocket 🚀</p>
         </div>
       </footer>
     </main>
