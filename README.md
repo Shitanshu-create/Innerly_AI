@@ -163,5 +163,5 @@ Contributions are welcome! Please open an issue first to discuss what you would 
 ---
 
 <p align="center">
-  Built with ❤️ by <strong>Team Rocket</strong> for Hacknovate 7.0
+  Built with ❤️ by <strong>Team Rocket</strong>
 </p>
