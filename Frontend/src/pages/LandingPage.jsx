@@ -29,14 +29,14 @@ const features = [
     accent: 'feature-accent-canary'
   },
   {
-    title: 'Semantic Chat Recall',
-    copy: 'Ask historical questions against a memory bank restricted to your past journals, never the open web.',
+    title: 'Hidden Pattern Detection',
+    copy: 'Uncover hidden patterns, identify triggers, and discover opportunities for personal growth.',
     icon: MessageCircleQuestion,
     accent: 'feature-accent-cobalt'
   },
   {
-    title: 'Streak Mastery',
-    copy: 'Gentle consistency tools that turn reflection into a durable habit without turning it into homework.',
+    title: 'Consistent Reflection',
+    copy: 'Build a sustainable journaling habit with meaningful insights that keep you engaged.',
     icon: Flame,
     accent: 'feature-accent-sprout'
   }
@@ -174,7 +174,7 @@ function LandingPage({ isLoggedIn }) {
           <button
             type="button"
             onClick={() => navigate(isLoggedIn ? '/journal' : '/login')}
-            className="nav-button nav-button-light"
+            className="nav-button nav-button-cobalt"
           >
             Start Writing
             <ArrowRight className="nav-button-icon" strokeWidth={3} />
@@ -192,7 +192,7 @@ function LandingPage({ isLoggedIn }) {
             <button
               type="button"
               onClick={() => navigate('/login')}
-              className="nav-button nav-button-cobalt"
+              className="nav-button nav-button-light"
             >
               Login
               <LogIn className="nav-button-icon" strokeWidth={3} />
@@ -202,36 +202,29 @@ function LandingPage({ isLoggedIn }) {
       </nav>
 
       <section id="top" className="hero-section">
-        <Sparkles className="scrub-doodle hero-sparkles" size={42} strokeWidth={2.5} />
-        <ToggleLeft className="scrub-doodle hero-toggle" size={44} strokeWidth={2.5} />
-
+        
         <div className="hero-copy">
-          <p className="hero-badge">
-            <ShieldCheck size={16} strokeWidth={3} />
-            privacy-first cognitive journaling
-          </p>
 
           <h1
             ref={heroTitleRef}
             className="hero-title"
             aria-label="Where thoughts become clarity."
           >
-            {heroWords.map((word) => (
-              <span key={word} className="hero-word-wrap">
-                <span className="hero-word">{word}</span>
-              </span>
-            ))}
+          {heroWords.map((word) => (
+          <span key={word} className="hero-word-wrap">
+            <span className={word === "clarity." ? "hero-word highlight" : "hero-word"}>
+              {word}
+            </span>
+          </span>
+  ))}
+
           </h1>
 
           <p className="hero-subtitle">
-            An external memory layer for your life.
+          A simple space to reflect, reduce mental clutter, and build a healthier relationship with your thoughts.
           </p>
 
           <div className="hero-actions">
-            <a href="#start" className="hero-primary-link">
-              Try the Toggle
-              <Sparkles size={18} strokeWidth={3} />
-            </a>
             <a href="#features" className="hero-secondary-link">
               Explore Features
               <ArrowRight size={18} strokeWidth={3} />
@@ -273,72 +266,14 @@ function LandingPage({ isLoggedIn }) {
         </SketchCard>
       </section>
 
-      <section id="start" className="privacy-section">
-        <div className="reveal-up section-heading-block">
-          <p className="section-kicker section-kicker-cobalt">core privacy switch</p>
-          <h2 className="section-title">Choose insight, or choose the vault.</h2>
-        </div>
-
-        <SketchCard className={`reveal-up privacy-card ${vaultMode ? 'is-vault' : 'is-ai'}`}>
-          <div className="privacy-grid">
-            <div>
-              <button
-                type="button"
-                aria-pressed={vaultMode}
-                onClick={() => setVaultMode((value) => !value)}
-                className={`vault-toggle ${vaultMode ? 'is-vault' : 'is-ai'}`}
-              >
-                <span className="vault-toggle-knob">
-                  {vaultMode ? <Lock size={26} strokeWidth={3} /> : <Sparkles size={28} strokeWidth={3} />}
-                </span>
-                <span className="vault-toggle-label">
-                  {vaultMode ? 'Vault' : 'AI'}
-                </span>
-              </button>
-              <p className="vault-status">
-                {vaultMode ? 'Vault Mode Locked' : 'AI Analytics Active'}
-              </p>
-              <p className="vault-copy">
-                {vaultMode
-                  ? 'Highly sensitive entries skip parsing and move straight to encrypted storage with zero cloud processing.'
-                  : 'Innerly can score patterns, map recurring triggers, and prepare memory-safe answers from past logs.'}
-              </p>
-            </div>
-
-            <div className={`route-card ${vaultMode ? 'is-vault' : 'is-ai'}`}>
-              <div className="route-card-header">
-                <p className="route-card-title">{vaultMode ? 'No AI route' : 'Insight route'}</p>
-                <span className="route-status-pill">
-                  {vaultMode ? 'locked' : 'live'}
-                </span>
-              </div>
-
-              <div className="route-steps">
-                {(vaultMode
-                  ? ['Text captured locally', 'AI parser bypassed', 'Encrypted DB write only']
-                  : ['Emotion scoring', 'Theme clustering', 'Memory chat indexing']
-                ).map((step) => (
-                  <div key={step} className="route-step">
-                    <span className={`route-step-check ${vaultMode ? 'is-vault' : 'is-ai'}`}>
-                      <Check size={15} strokeWidth={4} />
-                    </span>
-                    {step}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </SketchCard>
-      </section>
-
       <section id="features" className="features-section">
         <div className="reveal-up features-heading">
           <div>
-            <p className="section-kicker section-kicker-sprout">inside the companion</p>
-            <h2 className="section-title">Built for active clarity.</h2>
+            <p className="section-kicker section-kicker-sprout"></p>
+            <h2 className="section-title">Journaling Reimagined</h2>
           </div>
           <p className="features-copy">
-            A journal that remembers context, respects silence, and turns reflection into usable signals.
+
           </p>
         </div>
 
@@ -357,46 +292,92 @@ function LandingPage({ isLoggedIn }) {
           })}
         </div>
       </section>
+      <div className='vault-privacy-section'>
+        <section className="vault-section">
+          <div className="reveal-up vault-content">
+            <p className="vault-badge">
+              <Lock size={16} strokeWidth={3} />
+              Vault Mode
+            </p>
 
-      <section className="vault-section">
-        <div className="reveal-up vault-content">
-          <p className="vault-badge">
-            <Lock size={16} strokeWidth={3} />
-            Vault Mode
-          </p>
+            <div className="vault-icon">
+              <Lock size={42} strokeWidth={2.8} />
+            </div>
 
-          <div className="vault-icon">
-            <Lock size={42} strokeWidth={2.8} />
+            <h2 className="vault-title">
+              Encrypted end-to-end.
+            </h2>
+            <p className="vault-description">
+              Toggle Vault Mode when an entry needs to stay private: no AI parsing, no memory indexing, no cloud interpretation. Just your words moving into encrypted storage.
+            </p>
           </div>
 
-          <h2 className="vault-title">
-            Your thoughts. Your rules.
-          </h2>
-          <p className="vault-subtitle">
-            Encrypted end-to-end.
-          </p>
-          <p className="vault-description">
-            Toggle Vault Mode when an entry needs to stay private: no AI parsing, no memory indexing, no cloud interpretation. Just your words moving into encrypted storage.
-          </p>
-        </div>
+          <div className="reveal-up vault-points">
+            {['No AI parsing', 'Encrypted DB write', 'User-controlled memory'].map((item) => (
+              <div key={item} className="vault-point">
+                {item}
+              </div>
+            ))}
+          </div>
+        </section>
 
-        <div className="reveal-up vault-points">
-          {['No AI parsing', 'Encrypted DB write', 'User-controlled memory'].map((item) => (
-            <div key={item} className="vault-point">
-              {item}
+        <section id="start" className="privacy-section">
+          <SketchCard className={`reveal-up privacy-card ${vaultMode ? 'is-vault' : 'is-ai'}`}>
+            <div className="privacy-grid">
+              <div>
+                <button
+                  type="button"
+                  aria-pressed={vaultMode}
+                  onClick={() => setVaultMode((value) => !value)}
+                  className={`vault-toggle ${vaultMode ? 'is-vault' : 'is-ai'}`}
+                >
+                  <span className="vault-toggle-knob">
+                    {vaultMode ? <Lock size={15} strokeWidth={3} /> : <Sparkles size={15} strokeWidth={3} />}
+                  </span>
+
+                </button>
+                <p className="vault-status">
+                  {vaultMode ? 'Vault Mode Active' : 'AI Analytics Active'}
+                </p>
+                <p className="vault-copy">
+                  {vaultMode
+                    ? 'Highly sensitive entries skip parsing and move straight to encrypted storage with zero cloud processing.'
+                    : 'Innerly can score patterns, map recurring triggers, and prepare memory-safe answers from past logs.'}
+                </p>
+              </div>
+
+              <div className={`route-card ${vaultMode ? 'is-vault' : 'is-ai'}`}>
+                <div className="route-card-header">
+                  <p className="route-card-title">{vaultMode ? 'No AI route' : 'Insight route'}</p>
+                  <span className="route-status-pill">
+                    {vaultMode ? 'locked' : 'live'}
+                  </span>
+                </div>
+
+                <div className="route-steps">
+                  {(vaultMode
+                    ? ['Text saved locally', 'AI parser bypassed', 'Encrypted DB write only']
+                    : ['Emotion scoring', 'Theme clustering', 'Memory chat indexing']
+                  ).map((step) => (
+                    <div key={step} className="route-step">
+                      <span className={`route-step-check ${vaultMode ? 'is-vault' : 'is-ai'}`}>
+                        <Check size={15} strokeWidth={4} />
+                      </span>
+                      {step}
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-          ))}
-        </div>
-      </section>
+          </SketchCard>
+        </section>
+      </div>
 
       <section className="testimonials-section">
         <div className="reveal-up testimonials-heading">
-          <p className="testimonials-kicker">
-            <span className="testimonials-kicker-line" />
-            quiet voices
-          </p>
+
           <h2 className="testimonials-title">
-            What people <span>discovered</span>
+            What people discovered
           </h2>
         </div>
 
