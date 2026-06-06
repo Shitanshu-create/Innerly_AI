@@ -336,13 +336,13 @@ function WritingPage({
               )}
 
               {saveStatus.error && (
-                <p className="writing-label" style={{ color: '#FF7A90' }}>
+                <p className="writing-label" style={{ color: 'var(--color-danger-text)' }}>
                   {saveStatus.error}
                 </p>
               )}
 
               {saveStatus.success && saveStatus.message && (
-                <p className="writing-label" style={{ color: '#25D366' }}>
+                <p className="writing-label" style={{ color: 'var(--color-success)' }}>
                   {saveStatus.message || 'Saved'}
                 </p>
               )}

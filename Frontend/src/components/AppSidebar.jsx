@@ -6,18 +6,19 @@ import {
   Menu,
   MessageSquareText,
   Plus,
-  Settings,
+  Moon,
+  Sun,
   UserCircle,
   X
 } from 'lucide-react';
+import { useTheme } from '../features/theme/ThemeContext.jsx';
 import './appsidebar.css';
 
 const navItems = [
   { id: 'new', label: 'New entry', icon: Plus },
   { id: 'journal', label: 'Journal', icon: FileText },
   { id: 'chat', label: 'Memory chat', icon: MessageSquareText },
-  { id: 'analytics', label: 'Analytics', icon: BarChart3 },
-  { id: 'settings', label: 'Settings', icon: Settings }
+  { id: 'analytics', label: 'Analytics', icon: BarChart3 }
 ];
 
 function IconButton({ label, children, active = false, className = '', ...props }) {
@@ -46,6 +47,8 @@ function AppSidebar({
   onOpenAnalytics,
   onLogout
 }) {
+  const { isLight, toggleTheme } = useTheme();
+
   const handleNav = (id) => {
     if (id === 'new') {
       onNewEntry?.();
@@ -83,6 +86,12 @@ function AppSidebar({
       </div>
 
       <div className="sidebar-group">
+        <IconButton
+          label={isLight ? 'Use dark theme' : 'Use light theme'}
+          onClick={toggleTheme}
+        >
+          {isLight ? <Moon size={20} strokeWidth={3} /> : <Sun size={20} strokeWidth={3} />}
+        </IconButton>
         <IconButton label="Logout" onClick={onLogout} className="sidebar-logout-btn">
           <LogOut size={20} strokeWidth={3} />
         </IconButton>

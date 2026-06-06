@@ -1,12 +1,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import {
-  Bell,
-  Calendar,
   Check,
   ChevronDown,
-  Image,
-  Search,
-  Sparkles,
   X,
   Zap
 } from 'lucide-react';
@@ -18,11 +13,11 @@ import '../styles/analytics.css';
 const ranges = ['Past Week', 'Past Month', 'All Time'];
 
 const moods = [
-  { label: 'Calm', color: '#B9E7F2' },
-  { label: 'Anxious', color: '#D47070' },
-  { label: 'Productivity', color: '#DCC8FF' },
-  { label: 'Sadness', color: '#7DDBA5' },
-  { label: 'Happiness', color: '#6A6270' }
+  { label: 'Calm', color: 'var(--color-accent)' },
+  { label: 'Anxious', color: 'var(--color-danger)' },
+  { label: 'Productivity', color: 'var(--color-purple)' },
+  { label: 'Sadness', color: 'var(--color-success)' },
+  { label: 'Happiness', color: 'var(--color-text-soft)' }
 ];
 
 const insightErrorMessage = 'Observation/ Advice cannot be generated because our servers are experiencing heavy load';
@@ -42,7 +37,7 @@ function RadialScore({ value, color, label }) {
     <div className="radial-score-wrapper">
       <div
         className="radial-outer-circle"
-        style={{ background: `conic-gradient(${color} ${value * 3.6}deg, rgba(255,255,255,0.09) 0deg)` }}
+        style={{ background: `conic-gradient(${color} ${value * 3.6}deg, var(--color-surface-hover) 0deg)` }}
       >
         <div className="radial-inner-circle" style={{ color }}>
           {value}
@@ -50,34 +45,6 @@ function RadialScore({ value, color, label }) {
       </div>
       <p className="radial-label">{label}</p>
     </div>
-  );
-}
-
-function Topbar({ onOpenWriting }) {
-  const iconActions = [
-    { Icon: Search, label: 'Search entries' },
-    { Icon: Calendar, label: 'Open calendar' },
-    { Icon: Image, label: 'View media' },
-    { Icon: Bell, label: 'Notifications' }
-  ];
-
-  return (
-    <header className="analytics-topbar">
-      <div className="topbar-links">
-        <span>Calendar</span>
-        <span>Media</span>
-      </div>
-      <div className="topbar-actions">
-        {iconActions.map(({ Icon, label }) => (
-          <button key={label} type="button" aria-label={label} className="topbar-icon-btn">
-            <Icon size={16} />
-          </button>
-        ))}
-        <button type="button" onClick={onOpenWriting} className="topbar-quick-entry-btn">
-          Quick Entry
-        </button>
-      </div>
-    </header>
   );
 }
 
@@ -453,11 +420,11 @@ function AnalyticsPage({ onOpenWriting, onOpenChat, onLogout, entries, onSelectE
     const scoredEntries = entries.filter(e => e.raw && e.raw.gemini_response && e.raw.gemini_response.calmness_score !== undefined);
     if (scoredEntries.length === 0) {
       return [
-        { label: 'Calmness', value: 0, color: '#B9E7F2' },
-        { label: 'Happiness', value: 0, color: '#DCC8FF' },
-        { label: 'Stress Resilience', value: 0, color: '#E7BC68' },
-        { label: 'Positivity', value: 0, color: '#FF7A7A' },
-        { label: 'Purpose & Direction', value: 0, color: '#7DDBA5' }
+        { label: 'Calmness', value: 0, color: 'var(--color-accent)' },
+        { label: 'Happiness', value: 0, color: 'var(--color-purple)' },
+        { label: 'Stress Resilience', value: 0, color: 'var(--color-warning)' },
+        { label: 'Positivity', value: 0, color: 'var(--color-danger)' },
+        { label: 'Purpose & Direction', value: 0, color: 'var(--color-success)' }
       ];
     }
     let calm = 0, happy = 0, anxious = 0, sad = 0, prod = 0;
@@ -477,11 +444,11 @@ function AnalyticsPage({ onOpenWriting, onOpenChat, onLogout, entries, onSelectE
     const avgProd = Math.round(prod / len);
 
     return [
-      { label: 'Calmness', value: avgCalm, color: '#B9E7F2' },
-      { label: 'Happiness', value: avgHappy, color: '#DCC8FF' },
-      { label: 'Stress Resilience', value: Math.max(0, 100 - avgAnxious), color: '#E7BC68' },
-      { label: 'Positivity', value: Math.max(0, 100 - avgSad), color: '#FF7A7A' },
-      { label: 'Purpose & Direction', value: avgProd, color: '#7DDBA5' }
+      { label: 'Calmness', value: avgCalm, color: 'var(--color-accent)' },
+      { label: 'Happiness', value: avgHappy, color: 'var(--color-purple)' },
+      { label: 'Stress Resilience', value: Math.max(0, 100 - avgAnxious), color: 'var(--color-warning)' },
+      { label: 'Positivity', value: Math.max(0, 100 - avgSad), color: 'var(--color-danger)' },
+      { label: 'Purpose & Direction', value: avgProd, color: 'var(--color-success)' }
     ];
   }, [entries]);
 
@@ -544,7 +511,6 @@ function AnalyticsPage({ onOpenWriting, onOpenChat, onLogout, entries, onSelectE
         <SidePanel open={sidebarOpen} entries={entries} onSelectEntry={onSelectEntry} />
 
         <section className={`analytics-section ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
-          <Topbar onOpenWriting={onOpenWriting} />
           <div className="analytics-content-wrapper">
             <header className="analytics-header">
               <h1 className="analytics-h1">
@@ -558,7 +524,7 @@ function AnalyticsPage({ onOpenWriting, onOpenChat, onLogout, entries, onSelectE
                 <p className="header-desc">Loading latest journal signals...</p>
               )}
               {(statsRequest.error || insightsRequest.error) && (
-                <p className="header-desc" style={{ color: '#FF7A90' }}>
+                <p className="header-desc" style={{ color: 'var(--color-danger-text)' }}>
                   {statsRequest.error || insightsRequest.error}
                 </p>
               )}

@@ -1,6 +1,6 @@
 .writing-scroll {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.26) transparent;
+  scrollbar-color: var(--color-border-strong) transparent;
 }
 
 .writing-scroll::-webkit-scrollbar {
@@ -12,7 +12,7 @@
 }
 
 .writing-scroll::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.24);
+  background: var(--color-border-strong);
   border-radius: 999px;
 }
 
@@ -20,9 +20,9 @@
   height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
-  background-color: #101010;
+  background-color: var(--color-bg);
   font-family: Inter, ui-sans-serif, system-ui, sans-serif;
-  color: #ffffff;
+  color: var(--color-text);
 }
 
 .writing-flex-wrapper {
@@ -102,18 +102,19 @@
   align-items: center;
   gap: 0.5rem;
   border-radius: 9999px;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
   padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
   font-weight: 900;
 }
 
 .ai-icon-active {
-  color: #25D366;
+  color: var(--color-success);
 }
 
 .ai-icon-inactive {
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--color-text-faint);
 }
 
 .writing-label {
@@ -123,7 +124,7 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.18em;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--color-text-faint);
 }
 
 .writing-title-input {
@@ -137,17 +138,17 @@
   padding-bottom: 0.5rem;
   font-size: 1.5rem;
   font-weight: 900;
-  color: #ffffff;
+  color: var(--color-text-strong);
   outline: none;
   transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .writing-title-input::placeholder {
-  color: rgba(255, 255, 255, 0.25);
+  color: var(--color-text-faint);
 }
 
 .writing-title-input:focus {
-  color: #FFE45E;
+  color: var(--color-warning);
 }
 
 @media (min-width: 640px) {
@@ -161,13 +162,13 @@
   width: 100%;
   overflow: hidden;
   border-radius: 1rem;
-  border: 2px solid rgba(255, 255, 255, 0.7);
-  background-color: transparent;
+  border: 1px solid var(--color-border-strong);
+  background-color: var(--color-surface);
   padding: 1rem;
   font-size: 1rem;
   font-weight: 500;
   line-height: 1.625;
-  color: #ffffff;
+  color: var(--color-text);
   outline: none;
   transition: border-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
   box-sizing: border-box;
@@ -184,9 +185,9 @@
 }
 
 .writing-editor .ProseMirror mark {
-  background-color: #FFE45E;
+  background-color: var(--color-warning);
   border-radius: 2px;
-  color: #050505;
+  color: var(--color-ink);
   padding: 0 2px;
 }
 
@@ -200,7 +201,7 @@
 
 .writing-editor .ProseMirror p.is-editor-empty:first-child::before {
   pointer-events: none;
-  color: rgba(255, 255, 255, 0.25);
+  color: var(--color-text-faint);
   content: attr(data-placeholder);
   float: left;
   height: 0;
@@ -223,7 +224,8 @@
   align-items: center;
   gap: 0.75rem;
   border-radius: 1rem;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--color-surface-strong);
+  border: 1px solid var(--color-border);
   padding: 0.5rem;
 }
 
@@ -235,7 +237,8 @@
   place-items: center;
   overflow: hidden;
   border-radius: 0.75rem;
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: var(--color-surface-hover);
+  border: 1px solid var(--color-border);
 }
 
 .writing-media-element {
@@ -245,11 +248,11 @@
 }
 
 .writing-canary-text {
-  color: #FFE45E;
+  color: var(--color-warning);
 }
 
 .writing-dim-text {
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--color-text-soft);
 }
 
 .writing-audio-player {
@@ -263,15 +266,15 @@
   flex-shrink: 0;
   place-items: center;
   border-radius: 9999px;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-  border: none;
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-strong);
+  border: 1px solid var(--color-border);
   cursor: pointer;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .writing-media-remove-btn:hover {
-  background-color: #FF7A90;
+  background-color: var(--color-danger);
 }
 
 .writing-toolbar {
@@ -295,23 +298,23 @@
   width: 2.5rem;
   place-items: center;
   border-radius: 9999px;
-  border: none;
+  border: 1px solid var(--color-border);
   cursor: pointer;
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .writing-format-btn-active {
-  background-color: #FFE45E;
-  color: #101010;
+  background-color: var(--color-warning);
+  color: var(--color-ink);
 }
 
 .writing-format-btn-inactive {
-  background-color: rgba(255, 255, 255, 0.05);
-  color: #ffffff;
+  background-color: var(--color-surface);
+  color: var(--color-text-strong);
 }
 
 .writing-format-btn-inactive:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--color-surface-hover);
 }
 
 .writing-actions-group {
@@ -329,18 +332,18 @@
   align-items: center;
   gap: 0.5rem;
   border-radius: 9999px;
-  border: none;
+  border: 1px solid var(--color-border);
   cursor: pointer;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--color-surface);
   padding: 0.625rem 1rem;
   font-size: 0.875rem;
   font-weight: 900;
-  color: #ffffff;
+  color: var(--color-text-strong);
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .writing-btn-media:hover {
-  background-color: #2458FF;
+  background-color: var(--color-accent-strong);
 }
 
 .writing-btn-ai {
@@ -348,7 +351,7 @@
   align-items: center;
   gap: 0.5rem;
   border-radius: 9999px;
-  border: none;
+  border: 1px solid var(--color-border);
   cursor: pointer;
   padding: 0.625rem 1rem;
   font-size: 0.875rem;
@@ -357,13 +360,13 @@
 }
 
 .writing-btn-ai-active {
-  background-color: #25D366;
-  color: #101010;
+  background-color: var(--color-success);
+  color: var(--color-ink);
 }
 
 .writing-btn-ai-inactive {
-  background-color: rgba(255, 255, 255, 0.05);
-  color: #ffffff;
+  background-color: var(--color-surface);
+  color: var(--color-text-strong);
 }
 
 .writing-btn-save {
@@ -371,19 +374,19 @@
   align-items: center;
   gap: 0.5rem;
   border-radius: 9999px;
-  border: none;
+  border: 1px solid var(--color-border);
   cursor: pointer;
-  background-color: #0B63F6;
+  background-color: var(--color-accent-strong);
   padding: 0.625rem 1rem;
   font-size: 0.875rem;
   font-weight: 900;
-  color: #ffffff;
+  color: var(--color-text-strong);
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .writing-btn-save:hover {
   transform: translateY(-0.125rem);
-  background-color: #2458FF;
+  background-color: var(--color-accent);
 }
 
 .writing-btn-delete {
@@ -391,7 +394,7 @@
   align-items: center;
   gap: 0.5rem;
   border-radius: 9999px;
-  border: none;
+  border: 1px solid var(--color-border);
   cursor: pointer;
   padding: 0.625rem 1rem;
   font-size: 0.875rem;
@@ -400,8 +403,8 @@
 }
 
 .writing-btn-delete {
-  background-color: rgba(255, 122, 144, 0.18);
-  color: #FF9AAD;
+  background-color: color-mix(in srgb, var(--color-danger) 18%, transparent);
+  color: var(--color-danger-text);
 }
 
 .writing-btn-delete:hover {
@@ -409,8 +412,8 @@
 }
 
 .writing-btn-delete:hover {
-  background-color: #FF7A90;
-  color: #101010;
+  background-color: var(--color-danger);
+  color: var(--color-ink);
 }
 
 .writing-btn-delete:disabled,
@@ -428,15 +431,15 @@
   width: 2.5rem;
   place-items: center;
   border-radius: 9999px;
-  border: none;
+  border: 1px solid var(--color-border);
   cursor: pointer;
-  background-color: rgba(255, 122, 144, 0.18);
-  color: #FF9AAD;
+  background-color: color-mix(in srgb, var(--color-danger) 18%, transparent);
+  color: var(--color-danger-text);
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1), transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .writing-btn-delete-icon:hover {
   transform: translateY(-0.125rem);
-  background-color: #FF7A90;
-  color: #101010;
+  background-color: var(--color-danger);
+  color: var(--color-ink);
 }

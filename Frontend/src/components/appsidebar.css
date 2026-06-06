@@ -11,7 +11,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  background-color: #232323;
+  background-color: var(--color-sidebar);
+  border-right: 1px solid var(--color-border);
   padding-left: 0.75rem;
   padding-right: 0.75rem;
   padding-top: 1rem;
@@ -29,7 +30,7 @@
 .sidebar-divider {
   height: 1px;
   width: 2rem;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--color-border);
 }
 
 .sidebar-icon-btn {
@@ -40,26 +41,30 @@
   place-items: center;
   border-radius: 9999px;
   background-color: transparent;
-  border: none;
+  border: 1px solid transparent;
   cursor: pointer;
   transition: background-color 150ms ease, color 150ms ease;
 }
 
 .sidebar-icon-btn:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-  color: #ffffff;
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-strong);
+  border-color: var(--color-border);
 }
 
 .sidebar-icon-btn-active {
-  color: #B9E7F2;
+  color: var(--color-accent);
+  background-color: var(--color-surface-strong);
+  border-color: var(--color-border);
 }
 
 .sidebar-icon-btn-inactive {
-  color: rgba(255, 255, 255, 0.82);
+  color: var(--color-text-muted);
 }
 
 .sidebar-logout-btn:hover {
-  background-color: #FF7A90 !important;
+  background-color: var(--color-danger) !important;
+  color: var(--color-ink);
 }
 
 .sidebar-user-avatar {
@@ -68,6 +73,7 @@
   width: 2.75rem;
   place-items: center;
   border-radius: 9999px;
-  background-color: #FFE45E;
-  color: #050505;
+  background-color: var(--color-warning);
+  color: var(--color-ink);
+  border: 1px solid var(--color-border-strong);
 }

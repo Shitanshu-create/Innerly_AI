@@ -1,10 +1,67 @@
 :root {
-  color: #050505;
-  background: #f9f9f6;
+  --color-bg: #101010;
+  --color-bg-grid: #f9f9f6;
+  --color-sidebar: #232323;
+  --color-past-entries: #141414;
+  --color-surface: rgba(255, 255, 255, 0.035);
+  --color-surface-strong: rgba(255, 255, 255, 0.05);
+  --color-surface-hover: rgba(255, 255, 255, 0.08);
+  --color-input: rgba(255, 255, 255, 0.04);
+  --color-text: #ffffff;
+  --color-text-strong: #ffffff;
+  --color-text-muted: rgba(255, 255, 255, 0.68);
+  --color-text-soft: rgba(255, 255, 255, 0.62);
+  --color-text-faint: rgba(255, 255, 255, 0.45);
+  --color-border: rgba(255, 255, 255, 0.12);
+  --color-border-strong: rgba(255, 255, 255, 0.7);
+  --color-shadow: rgba(0, 0, 0, 0.28);
+  --color-accent: #B9E7F2;
+  --color-accent-strong: #2458FF;
+  --color-success: #25D366;
+  --color-warning: #FFE45E;
+  --color-danger: #FF7A90;
+  --color-danger-text: #FF9AAD;
+  --color-purple: #874fe7;
+  --color-mint: #8FF0D2;
+  --color-coral: #FFB088;
+  --color-ink: #050505;
+  --radius-panel: 1rem;
+  --radius-control: 9999px;
+  --shadow-panel: 0 18px 45px var(--color-shadow);
+  color: var(--color-ink);
+  background: var(--color-bg-grid);
   font-synthesis: none;
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+:root[data-theme="light"] {
+  --color-bg: #F8F7F4;
+  --color-bg-grid: #F8F7F4;
+  --color-sidebar: #ECE9E2;
+  --color-past-entries: #F0EEE8;
+  --color-surface: #FDFBF6;
+  --color-surface-strong: #F4F1EA;
+  --color-surface-hover: #EEEAE1;
+  --color-input: #FDFBF6;
+  --color-text: #111111;
+  --color-text-strong: #111111;
+  --color-text-muted: #3C3C3C;
+  --color-text-soft: #505050;
+  --color-text-faint: #666666;
+  --color-border: #C9C3B6;
+  --color-border-strong: #8D8678;
+  --color-shadow: rgba(33, 28, 18, 0.12);
+  --color-accent: #176C7F;
+  --color-accent-strong: #1E54D8;
+  --color-success: #118F43;
+  --color-warning: #D6A900;
+  --color-danger: #D94A62;
+  --color-danger-text: #A83449;
+  --color-purple: #6528bb;
+  --color-mint: #177E66;
+  --color-coral: #B8572F;
 }
 
 *,
@@ -607,11 +664,11 @@ a {
 }
 
 .section-kicker-cobalt {
-  color: #2458FF;
+  color: var(--color-accent-strong);
 }
 
 .section-kicker-sprout {
-  color: #25D366;
+  color: var(--color-success);
 }
 
 .section-title {
@@ -633,7 +690,7 @@ a {
 
 .privacy-card {
   padding: 1rem;
-  transition: background-color 300ms ease, color 300ms ease, border-color 300ms ease;
+  transition: background-color 420ms ease, color 420ms ease, border-color 420ms ease;
 }
 @media (min-width: 640px) {
   .privacy-card {
@@ -647,11 +704,11 @@ a {
 }
 
 .privacy-card.is-vault {
-  background-color: #FFFFFF;
+  background-color: var(--color-surface);
 }
 
 .privacy-card.is-ai {
-  background-color: #F6FAFF;
+  background-color: color-mix(in srgb, var(--color-accent-strong) 7%, var(--color-surface));
 }
 
 .privacy-grid {
@@ -673,12 +730,13 @@ a {
   max-width: 20rem;
   align-items: center;
   border-radius: 9999px;
-  border: 4px solid #050505;
-  background-color: #FFFFFF;
+  border: 4px solid var(--color-ink);
+  background-color: var(--color-surface);
   padding: 0.5rem;
-  box-shadow: 7px 7px 0 #050505;
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 7px 7px 0 var(--color-ink);
+  transition: background-color 420ms ease, box-shadow 420ms ease, border-color 420ms ease;
   cursor: pointer;
+  overflow: hidden;
 }
 @media (min-width: 640px) {
   .vault-toggle {
@@ -687,21 +745,24 @@ a {
 }
 
 .vault-toggle.is-vault {
-  justify-content: flex-end;
+  background-color: color-mix(in srgb, var(--color-warning) 28%, var(--color-surface));
 }
 
 .vault-toggle.is-ai {
-  justify-content: flex-start;
+  background-color: color-mix(in srgb, var(--color-accent-strong) 7%, var(--color-surface));
 }
 
 .vault-toggle-knob {
+  position: absolute;
+  left: 0.5rem;
   display: grid;
   height: 3.5rem;
   width: 3.5rem;
   place-items: center;
   border-radius: 9999px;
-  border: 4px solid #050505;
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 4px solid var(--color-ink);
+  will-change: left;
+  transition: left 520ms cubic-bezier(0.22, 1, 0.36, 1), background-color 420ms ease, color 420ms ease, box-shadow 420ms ease;
 }
 @media (min-width: 640px) {
   .vault-toggle-knob {
@@ -711,14 +772,22 @@ a {
 }
 
 .vault-toggle.is-vault .vault-toggle-knob {
-  background-color: #FFE45E;
-  box-shadow: 4px 4px 0 #050505;
+  background-color: var(--color-warning);
+  box-shadow: 4px 4px 0 var(--color-ink);
+  left: calc(100% - 4rem);
 }
 
 .vault-toggle.is-ai .vault-toggle-knob {
-  background-color: #2458FF;
-  color: #FFFFFF;
-  box-shadow: 0 18px 60px rgba(36, 88, 255, 0.18);
+  background-color: var(--color-accent-strong);
+  color: var(--color-surface);
+  box-shadow: 0 18px 60px color-mix(in srgb, var(--color-accent-strong) 18%, transparent);
+  left: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .vault-toggle.is-vault .vault-toggle-knob {
+    left: calc(100% - 4.5rem);
+  }
 }
 
 .vault-toggle-label {
@@ -728,6 +797,7 @@ a {
   font-family: "Innerly Hand", "Comic Sans MS", "Bradley Hand", cursive;
   font-size: 1.125rem;
   font-weight: 700;
+  transition: color 360ms ease, left 520ms cubic-bezier(0.22, 1, 0.36, 1), right 520ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 @media (min-width: 640px) {
   .vault-toggle-label {
@@ -736,11 +806,11 @@ a {
 }
 
 .vault-toggle.is-vault .vault-toggle-label {
-  left: 1.5rem;
+  left: 3rem;
 }
 
 .vault-toggle.is-ai .vault-toggle-label {
-  right: 1.5rem;
+  right: 3rem;
 }
 
 .vault-status {
@@ -748,6 +818,7 @@ a {
   font-family: "Innerly Hand", "Comic Sans MS", "Bradley Hand", cursive;
   font-size: 1.25rem;
   font-weight: 700;
+  transition: color 360ms ease;
 }
 @media (min-width: 640px) {
   .vault-status {
@@ -761,22 +832,24 @@ a {
   font-size: 1rem;
   font-weight: 700;
   line-height: 1.625;
-  color: rgba(5, 5, 5, 0.7);
+  color: var(--color-text-muted);
+  transition: color 360ms ease;
 }
 
 .route-card {
   border-radius: 1.25rem;
-  border: 3px solid #050505;
+  border: 3px solid var(--color-ink);
   padding: 1rem;
-  box-shadow: 4px 4px 0 #050505;
+  box-shadow: 4px 4px 0 var(--color-ink);
+  transition: background-color 420ms ease, box-shadow 420ms ease, border-color 420ms ease;
 }
 
 .route-card.is-vault {
-  background-color: #FFE45E;
+  background-color: var(--color-warning);
 }
 
 .route-card.is-ai {
-  background-color: #FFFFFF;
+  background-color: var(--color-surface);
 }
 
 .route-card-header {
@@ -795,12 +868,13 @@ a {
 
 .route-status-pill {
   border-radius: 9999px;
-  border: 3px solid #050505;
-  background-color: #FFFFFF;
+  border: 3px solid var(--color-ink);
+  background-color: var(--color-surface);
   padding: 0.25rem 0.75rem;
   font-family: "Innerly Hand", "Comic Sans MS", "Bradley Hand", cursive;
   font-size: 1rem;
   font-weight: 700;
+  transition: background-color 360ms ease, color 360ms ease;
 }
 
 .route-steps {
@@ -813,11 +887,12 @@ a {
   align-items: center;
   gap: 0.75rem;
   border-radius: 1rem;
-  border: 3px solid #050505;
-  background-color: #FFFFFF;
+  border: 3px solid var(--color-ink);
+  background-color: var(--color-surface);
   padding: 0.625rem;
   font-size: 0.875rem;
   font-weight: 700;
+  transition: background-color 360ms ease, border-color 360ms ease, transform 360ms ease;
 }
 @media (min-width: 640px) {
   .route-step {
@@ -832,16 +907,21 @@ a {
   flex-shrink: 0;
   place-items: center;
   border-radius: 9999px;
-  border: 2px solid #050505;
+  border: 2px solid var(--color-ink);
+  transition: background-color 360ms ease, color 360ms ease, border-color 360ms ease;
 }
 
 .route-step-check.is-vault {
-  background-color: #FFFFFF;
+  background-color: var(--color-surface);
 }
 
 .route-step-check.is-ai {
-  background-color: #25D366;
+  background-color: var(--color-success);
 }
+
+
+
+
 
 .features-heading {
   margin-bottom: 1.25rem;

@@ -20,7 +20,7 @@ class ErrorBoundary extends React.Component {
         <div className="auth-page-container">
           <div className="auth-wrapper" style={{ textAlign: 'center', padding: '2rem' }}>
             <h1 className="auth-title">Something went wrong</h1>
-            <p style={{ marginTop: '1rem', color: 'rgba(5,5,5,0.6)' }}>
+            <p style={{ marginTop: '1rem', color: 'var(--color-text-muted)' }}>
               {this.state.error?.message || 'An unexpected error occurred'}
             </p>
             <button

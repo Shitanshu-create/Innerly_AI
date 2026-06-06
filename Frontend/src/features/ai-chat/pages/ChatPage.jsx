@@ -135,8 +135,7 @@ export default function ChatPage({ onOpenWriting, onOpenAnalytics, onLogout, ent
                 {msg.role === 'user' ? 'YOU' : 'INNERLY'}
               </div>
               <div
-                className="chat-bubble"
-                style={msg.role === 'user' ? { borderTopLeftRadius: '1rem', borderTopRightRadius: '0.125rem', backgroundColor: 'rgba(255, 255, 255, 0.08)' } : {}}
+                className={`chat-bubble ${msg.role === 'user' ? 'chat-bubble-user' : ''}`}
               >
                 {msg.paragraphs ? (
                   msg.paragraphs.map((p, idx) => (

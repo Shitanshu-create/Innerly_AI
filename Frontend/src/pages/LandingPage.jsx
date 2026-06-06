@@ -203,12 +203,12 @@ function LandingPage({ isLoggedIn }) {
 
       <section id="top" className="hero-section">
         <Sparkles className="scrub-doodle hero-sparkles" size={42} strokeWidth={2.5} />
-        <ToggleLeft className="scrub-doodle hero-toggle" size={44} strokeWidth={2.5} />
+        {/* <ToggleLeft className="scrub-doodle hero-toggle" size={44} strokeWidth={2.5} /> */}
 
         <div className="hero-copy">
           <p className="hero-badge">
             <ShieldCheck size={16} strokeWidth={3} />
-            privacy-first cognitive journaling
+            Analytics-driven cognitive journaling
           </p>
 
           <h1
@@ -228,10 +228,6 @@ function LandingPage({ isLoggedIn }) {
           </p>
 
           <div className="hero-actions">
-            <a href="#start" className="hero-primary-link">
-              Try the Toggle
-              <Sparkles size={18} strokeWidth={3} />
-            </a>
             <a href="#features" className="hero-secondary-link">
               Explore Features
               <ArrowRight size={18} strokeWidth={3} />
@@ -424,7 +420,7 @@ function LandingPage({ isLoggedIn }) {
       <footer className="landing-footer">
         <div className="landing-footer-inner">
           <p className="landing-footer-brand">Innerly</p>
-          <p className="landing-footer-copy">Built by Team Rocket 🚀</p>
+          <p className="landing-footer-copy">Built by Team Rocket🚀</p>
         </div>
       </footer>
     </main>
