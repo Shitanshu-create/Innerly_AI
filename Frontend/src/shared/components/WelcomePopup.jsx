@@ -8,15 +8,19 @@ export function WelcomePopup() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    if (!user || !user.id) return;
+    if (!user || !user.id) {
+      setShow(false);
+      return;
+    }
 
-    const today = new Date().toDateString();
-    const key = `last_welcome_date_${user.id}`;
-    const lastWelcome = localStorage.getItem(key);
+    const sessionKey = `welcome_shown_session`;
+    const alreadyShown = sessionStorage.getItem(sessionKey);
 
-    if (lastWelcome !== today) {
+    if (!alreadyShown) {
       setShow(true);
-      localStorage.setItem(key, today);
+      sessionStorage.setItem(sessionKey, "true");
+    } else {
+      setShow(false);
     }
   }, [user]);
 
