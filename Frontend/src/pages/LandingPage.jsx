@@ -4,15 +4,18 @@ import {
   ArrowRight,
   BarChart3,
   Check,
+  ClipboardList,
   Feather,
   Flame,
   Lock,
   LogIn,
   MessageCircleQuestion,
+  Repeat2,
   Quote,
   ShieldCheck,
   Sparkles,
-  ToggleLeft
+  Target,
+  TrendingUp
 } from 'lucide-react';
 
 const analytics = [
@@ -29,16 +32,41 @@ const features = [
     accent: 'feature-accent-canary'
   },
   {
-    title: 'Hidden Pattern Detection',
-    copy: 'Uncover hidden patterns, identify triggers, and discover opportunities for personal growth.',
+    title: 'Semantic Chat Recall',
+    copy: 'Ask historical questions against a memory bank restricted to your past journals, never the open web.',
     icon: MessageCircleQuestion,
     accent: 'feature-accent-cobalt'
   },
   {
-    title: 'Consistent Reflection',
-    copy: 'Build a sustainable journaling habit with meaningful insights that keep you engaged.',
+    title: 'Streak Mastery',
+    copy: 'Gentle consistency tools that turn reflection into a durable habit without turning it into homework.',
     icon: Flame,
     accent: 'feature-accent-sprout'
+  }
+];
+
+
+const pricingPlans = [
+  {
+    name: 'Free',
+    price: '$0',
+    note: 'For simple daily reflection.',
+    features: ['Journal writing', 'Private entry drafts', 'Basic streak tracking'],
+    accent: 'pricing-accent-sprout'
+  },
+  {
+    name: 'Basic',
+    price: '$8',
+    note: 'For reflection with clarity signals.',
+    features: ['Journal writing', 'Analytics dashboard', 'Mood timeline'],
+    accent: 'pricing-accent-canary'
+  },
+  {
+    name: 'Advanced',
+    price: '$15',
+    note: 'For the complete Innerly experience.',
+    features: ['All features', 'AI chat', 'Recurring themes'],
+    accent: 'pricing-accent-cobalt'
   }
 ];
 
@@ -202,7 +230,7 @@ function LandingPage({ isLoggedIn }) {
       </nav>
 
       <section id="top" className="hero-section">
-        
+
         <div className="hero-copy">
           <p className="hero-badge">
             <ShieldCheck size={16} strokeWidth={3} />
@@ -214,18 +242,18 @@ function LandingPage({ isLoggedIn }) {
             className="hero-title"
             aria-label="Where thoughts become clarity."
           >
-          {heroWords.map((word) => (
-          <span key={word} className="hero-word-wrap">
-            <span className={word === "clarity." ? "hero-word highlight" : "hero-word"}>
-              {word}
-            </span>
-          </span>
-  ))}
+            {heroWords.map((word) => (
+              <span key={word} className="hero-word-wrap">
+                <span className={word === "clarity." ? "hero-word highlight" : "hero-word"}>
+                  {word}
+                </span>
+              </span>
+            ))}
 
           </h1>
 
           <p className="hero-subtitle">
-          A simple space to reflect, reduce mental clutter, and build a healthier relationship with your thoughts.
+            A simple space to reflect, reduce mental clutter, and build a healthier relationship with your thoughts.
           </p>
 
           <div className="hero-actions">
@@ -273,12 +301,8 @@ function LandingPage({ isLoggedIn }) {
       <section id="features" className="features-section">
         <div className="reveal-up features-heading">
           <div>
-            <p className="section-kicker section-kicker-sprout"></p>
-            <h2 className="section-title">Journaling Reimagined</h2>
+            <h2 className="section-title">Built for active clarity.</h2>
           </div>
-          <p className="features-copy">
-
-          </p>
         </div>
 
         <div className="feature-grid">
@@ -296,92 +320,132 @@ function LandingPage({ isLoggedIn }) {
           })}
         </div>
       </section>
-      <div className='vault-privacy-section'>
-        <section className="vault-section">
-          <div className="reveal-up vault-content">
-            <p className="vault-badge">
-              <Lock size={16} strokeWidth={3} />
-              Vault Mode
-            </p>
 
-            <div className="vault-icon">
-              <Lock size={42} strokeWidth={2.8} />
-            </div>
 
-            <h2 className="vault-title">
-              Encrypted end-to-end.
-            </h2>
-            <p className="vault-description">
-              Toggle Vault Mode when an entry needs to stay private: no AI parsing, no memory indexing, no cloud interpretation. Just your words moving into encrypted storage.
-            </p>
+      <section className="vault-section">
+        <div className="reveal-up vault-content">
+          <p className="vault-badge">
+            <Lock size={16} strokeWidth={3} />
+            Vault Mode
+          </p>
+
+          <div className="vault-icon">
+            <Lock size={42} strokeWidth={2.8} />
           </div>
 
-          <div className="reveal-up vault-points">
-            {['No AI parsing', 'Encrypted DB write', 'User-controlled memory'].map((item) => (
-              <div key={item} className="vault-point">
-                {item}
+          <h2 className="vault-title">
+            Your thoughts. Your rules.
+          </h2>
+          <p className="vault-subtitle">
+            Encrypted end-to-end.
+          </p>
+          <p className="vault-description">
+            Toggle Vault Mode when an entry needs to stay private: no AI parsing, no memory indexing, no cloud interpretation. Just your words moving into encrypted storage.
+          </p>
+        </div>
+
+        <div className="reveal-up vault-points">
+          {['No AI parsing', 'Encrypted DB write', 'User-controlled memory'].map((item) => (
+            <div key={item} className="vault-point">
+              {item}
+            </div>
+          ))}
+        </div>
+      </section>
+
+
+      <section id="start" className="privacy-section">
+        <SketchCard className={`reveal-up privacy-card ${vaultMode ? 'is-vault' : 'is-ai'}`}>
+          <div className="privacy-grid">
+            <div>
+              <button
+                type="button"
+                aria-pressed={vaultMode}
+                onClick={() => setVaultMode((value) => !value)}
+                className={`vault-toggle ${vaultMode ? 'is-vault' : 'is-ai'}`}
+              >
+                <span className="vault-toggle-knob">
+                  {vaultMode ? <Lock size={26} strokeWidth={3} /> : <Sparkles size={28} strokeWidth={3} />}
+                </span>
+                <span className="vault-toggle-label">
+                  {vaultMode ? 'Vault' : 'AI'}
+                </span>
+              </button>
+              <p className="vault-status">
+                {vaultMode ? 'Vault Mode Locked' : 'AI Analytics Active'}
+              </p>
+              <p className="vault-copy">
+                {vaultMode
+                  ? 'Highly sensitive entries skip parsing and move straight to encrypted storage with zero cloud processing.'
+                  : 'Innerly can score patterns, map recurring triggers, and prepare memory-safe answers from past logs.'}
+              </p>
+            </div>
+
+            <div className={`route-card ${vaultMode ? 'is-vault' : 'is-ai'}`}>
+              <div className="route-card-header">
+                <p className="route-card-title">{vaultMode ? 'No AI route' : 'Insight route'}</p>
+                <span className="route-status-pill">
+                  {vaultMode ? 'locked' : 'live'}
+                </span>
               </div>
-            ))}
-          </div>
-        </section>
 
-        <section id="start" className="privacy-section">
-          <SketchCard className={`reveal-up privacy-card ${vaultMode ? 'is-vault' : 'is-ai'}`}>
-            <div className="privacy-grid">
-              <div>
-                <button
-                  type="button"
-                  aria-pressed={vaultMode}
-                  onClick={() => setVaultMode((value) => !value)}
-                  className={`vault-toggle ${vaultMode ? 'is-vault' : 'is-ai'}`}
-                >
-                  <span className="vault-toggle-knob">
-                    {vaultMode ? <Lock size={15} strokeWidth={3} /> : <Sparkles size={15} strokeWidth={3} />}
-                  </span>
-
-                </button>
-                <p className="vault-status">
-                  {vaultMode ? 'Vault Mode Active' : 'AI Analytics Active'}
-                </p>
-                <p className="vault-copy">
-                  {vaultMode
-                    ? 'Highly sensitive entries skip parsing and move straight to encrypted storage with zero cloud processing.'
-                    : 'Innerly can score patterns, map recurring triggers, and prepare memory-safe answers from past logs.'}
-                </p>
-              </div>
-
-              <div className={`route-card ${vaultMode ? 'is-vault' : 'is-ai'}`}>
-                <div className="route-card-header">
-                  <p className="route-card-title">{vaultMode ? 'No AI route' : 'Insight route'}</p>
-                  <span className="route-status-pill">
-                    {vaultMode ? 'locked' : 'live'}
-                  </span>
-                </div>
-
-                <div className="route-steps">
-                  {(vaultMode
-                    ? ['Text saved locally', 'AI parser bypassed', 'Encrypted DB write only']
-                    : ['Emotion scoring', 'Theme clustering', 'Memory chat indexing']
-                  ).map((step) => (
-                    <div key={step} className="route-step">
-                      <span className={`route-step-check ${vaultMode ? 'is-vault' : 'is-ai'}`}>
-                        <Check size={15} strokeWidth={4} />
-                      </span>
-                      {step}
-                    </div>
-                  ))}
-                </div>
+              <div className="route-steps">
+                {(vaultMode
+                  ? ['Text captured locally', 'AI parser bypassed', 'Encrypted DB write only']
+                  : ['Emotion scoring', 'Theme clustering', 'Memory chat indexing']
+                ).map((step) => (
+                  <div key={step} className="route-step">
+                    <span className={`route-step-check ${vaultMode ? 'is-vault' : 'is-ai'}`}>
+                      <Check size={15} strokeWidth={4} />
+                    </span>
+                    {step}
+                  </div>
+                ))}
               </div>
             </div>
-          </SketchCard>
-        </section>
-      </div>
+          </div>
+        </SketchCard>
+      </section>
+
+
+      <section className="pricing-section">
+        <div className="reveal-up pricing-heading">
+          <div>
+            <p className="section-kicker section-kicker-cobalt">Plans</p>
+            <h2 className="section-title">Choose your pace</h2>
+          </div>
+        </div>
+
+        <div className="pricing-grid">
+          {pricingPlans.map((plan) => (
+            <SketchCard key={plan.name} className={`reveal-up pricing-card ${plan.accent}`}>
+              <div className="pricing-card-header">
+                <p className="pricing-name">{plan.name}</p>
+                <ClipboardList size={24} strokeWidth={3} />
+              </div>
+              <p className="pricing-price">
+                {plan.price}
+                <span>/mo</span>
+              </p>
+              <p className="pricing-note">{plan.note}</p>
+              <div className="pricing-features">
+                {plan.features.map((item) => (
+                  <span key={item} className="pricing-feature">
+                    <Check size={15} strokeWidth={4} />
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </SketchCard>
+          ))}
+        </div>
+      </section>
+
 
       <section className="testimonials-section">
         <div className="reveal-up testimonials-heading">
-
           <h2 className="testimonials-title">
-            What people discovered
+            What people <span>discovered</span>
           </h2>
         </div>
 

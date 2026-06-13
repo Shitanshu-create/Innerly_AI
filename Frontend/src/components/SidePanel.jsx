@@ -1,23 +1,27 @@
 import React from 'react';
-import { Search } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import './sidepanel.css';
 
-function SidePanel({ open, entries, onSelectEntry }) {
+function SidePanel({ open, entries, onSelectEntry, onClose }) {
   return (
     <aside
       className={`side-panel sidepanel-aside ${open ? 'sidepanel-open' : 'sidepanel-closed'}`}
     >
       <div className="sidepanel-content">
-        <div className="sidepanel-search-bar">
-          <Search size={17} />
-          <span className="sidepanel-search-text">Search entries</span>
-        </div>
-
         <div className="sidepanel-header">
-          <h2 className="sidepanel-title">Past Entries</h2>
-          <span className="sidepanel-badge">
-            {entries.length}
-          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <h2 className="sidepanel-title">Past Entries</h2>
+            <span className="sidepanel-badge">
+              {entries.length}
+            </span>
+          </div>
+          <button 
+            className="sidepanel-close-btn"
+            onClick={onClose}
+            aria-label="Close"
+          >
+            <X size={20} strokeWidth={3} />
+          </button>
         </div>
 
         <div className="sidepanel-list">
@@ -25,7 +29,12 @@ function SidePanel({ open, entries, onSelectEntry }) {
             <button
               key={entry.id}
               type="button"
-              onClick={() => onSelectEntry?.(entry)}
+              onClick={() => {
+                onSelectEntry?.(entry);
+                if (window.innerWidth < 500) {
+                  onClose?.();
+                }
+              }}
               className="sidepanel-item"
             >
               <span className="sidepanel-item-date">{entry.date}</span>

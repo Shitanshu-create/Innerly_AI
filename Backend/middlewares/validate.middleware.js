@@ -1,6 +1,10 @@
 const validateBody = (schema) => (req, res, next) => {
-    req.body = schema.parse(req.body);
-    next();
+    try {
+        req.body = schema.parse(req.body);
+        next();
+    } catch (err) {
+        next(err);
+    }
 };
 
 const validateParams = (schema) => (req, res, next) => {

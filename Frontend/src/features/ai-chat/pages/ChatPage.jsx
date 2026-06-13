@@ -7,7 +7,7 @@ import {
 import AppSidebar from '../../../components/AppSidebar.jsx';
 import SidePanel from '../../../components/SidePanel.jsx';
 import { chatWithAI } from '../services/journal.api.js';
-import '../styles/journal.css';
+import '../styles/ChatPage.css';
 
 export default function ChatPage({ onOpenWriting, onOpenAnalytics, onLogout, entries, onSelectEntry }) {
   const [inputText, setInputText] = useState('');
@@ -15,26 +15,39 @@ export default function ChatPage({ onOpenWriting, onOpenAnalytics, onLogout, ent
   const chatEndRef = useRef(null);
 
   // * Stateful chat conversation history starting with welcoming guidance
-  const [messages, setMessages] = useState([
-    {
-      role: 'ai',
-      paragraphs: [
-        "Hi"  ,
-        "I'm Innerly, your AI reflection partner. I'm here to help you explore your thoughts and notice patterns in your journal. Feel free to ask me anything about your entries—like what moods have been dominant lately, what tends to lift your spirits, or what patterns I've noticed."
-      ],
-      highlight: 1
-    }
-  ]);
+  const [messages, setMessages] = useState(() => {
+    const saved = sessionStorage.getItem('ai_chat_messages');
+    if (saved) return JSON.parse(saved);
+    return [
+      {
+        role: 'ai',
+        text: "Hi, I'm Innerly, your AI reflection partner. I'm here to help you explore your thoughts and notice patterns in your journal."
+      }
+    ];
+  });
 
   // * Dynamic follow-up recommendations populated from backend AI responses
-  const [suggestions, setSuggestions] = useState([
-    "What patterns do you see in my recent entries?",
-    "When do I feel most energized?",
-    "What triggers my anxious days?",
-    "How has my mood changed recently?"
-  ]);
+  const [suggestions, setSuggestions] = useState(() => {
+    const saved = sessionStorage.getItem('ai_chat_suggestions');
+    if (saved) return JSON.parse(saved);
+    return [
+      "What patterns do you see in my recent entries?",
+      "When do I feel most energized?",
+      "What triggers my anxious days?",
+      "How has my mood changed recently?"
+    ];
+  });
 
   const [loadingChat, setLoadingChat] = useState(false);
+
+  // * Persist messages and suggestions to sessionStorage
+  useEffect(() => {
+    sessionStorage.setItem('ai_chat_messages', JSON.stringify(messages));
+  }, [messages]);
+
+  useEffect(() => {
+    sessionStorage.setItem('ai_chat_suggestions', JSON.stringify(suggestions));
+  }, [suggestions]);
 
   // * Automatically scroll chat window to bottom on new messages
   useEffect(() => {
@@ -55,18 +68,19 @@ export default function ChatPage({ onOpenWriting, onOpenAnalytics, onLogout, ent
     setLoadingChat(true);
 
     try {
-      const conversationHistory = messages.map(m => ({
-        role: m.role,
-        text: m.text || (m.paragraphs ? m.paragraphs.join('\n') : '')
-      }));
+      const conversationHistory = messages
+        .map(m => ({
+          role: m.role,
+          text: m.text || ''
+        }))
+        .filter(m => m.text.length > 0);
 
       const res = await chatWithAI({ message: query, conversationHistory });
       
       if (res && res.response) {
         setMessages((prev) => [...prev, {
           role: 'ai',
-          paragraphs: res.response.paragraphs,
-          highlight: res.response.highlight
+          text: res.response.text
         }]);
 
         if (res.response.followUpSuggestions && res.response.followUpSuggestions.length > 0) {
@@ -103,26 +117,17 @@ export default function ChatPage({ onOpenWriting, onOpenAnalytics, onLogout, ent
         onOpenAnalytics={onOpenAnalytics}
         onLogout={onLogout}
       />
-      <SidePanel open={sidebarOpen} entries={entries} onSelectEntry={onSelectEntry} />
+      <SidePanel 
+        open={sidebarOpen} 
+        entries={entries} 
+        onSelectEntry={onSelectEntry} 
+        onClose={() => setSidebarOpen(false)}
+      />
 
       <section className={`chat-section ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
-        <header className="chat-header">
-          <div className="chat-header-title-wrapper">
-            <span className="chat-indicator-dot" />
-            YOUR JOURNAL, LISTENING
-          </div>
-          <div className="chat-header-actions">
-            <button className="chat-header-btn"><Bell size={16} /></button>
-            <button className="chat-header-btn"><Maximize2 size={16} /></button>
-          </div>
-        </header>
 
         <div className="chat-body-scroll">
-          <div className="chat-separator-container">
-            <div className="chat-separator-line" />
-            <span className="chat-separator-text">TODAY - MAY 2026</span>
-            <div className="chat-separator-line" />
-          </div>
+
 
           {messages.map((msg, index) => (
             <div
@@ -137,14 +142,12 @@ export default function ChatPage({ onOpenWriting, onOpenAnalytics, onLogout, ent
               <div
                 className={`chat-bubble ${msg.role === 'user' ? 'chat-bubble-user' : ''}`}
               >
-                {msg.paragraphs ? (
-                  msg.paragraphs.map((p, idx) => (
-                    <p key={idx} className={idx === msg.highlight ? "chat-welcome-quote" : ""}>
-                      {p}
-                    </p>
-                  ))
-                ) : (
-                  <p>{msg.text}</p>
+                {msg.text && (
+                  <>
+                    {/* AI text is rendered as plain text — React auto-escapes. 
+                        DO NOT use dangerouslySetInnerHTML here. */}
+                    <p>{msg.text}</p>
+                  </>
                 )}
               </div>
             </div>
@@ -184,7 +187,7 @@ export default function ChatPage({ onOpenWriting, onOpenAnalytics, onLogout, ent
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Share a thought or ask about your patterns..."
+              placeholder="Share a thought..."
               className="chat-input-textarea"
               rows="1"
               disabled={loadingChat}

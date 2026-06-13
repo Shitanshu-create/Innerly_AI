@@ -3,6 +3,7 @@ import journalReportModel from "../models/journalReport.model.js";
 import UserStats from "../models/userStats.model.js";
 import InsightsCache from "../models/insightsCache.model.js";
 import { recalculateUserStats } from "../services/stats.service.js";
+import { sanitizeForPrompt } from "../utils/sanitize.js";
 
 /**
  * @desc Generate a journal report based on the provided journal entry.
@@ -37,17 +38,24 @@ async function generateJournalReportController(req, res) {
         /* Parse media images if provided */
         const media = [];
         if (req.body.uploadedFiles && Array.isArray(req.body.uploadedFiles)) {
-            req.body.uploadedFiles.forEach(file => {
+            const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB per file
+            for (const file of req.body.uploadedFiles) {
                 if (file.data) {
                     /* Convert base64 to buffer */
                     const base64Data = file.data.split(',')[1] || file.data;
+                    const byteLength = Buffer.byteLength(base64Data, 'base64');
+                    
+                    if (byteLength > MAX_FILE_SIZE) {
+                        return res.status(400).json({ message: "File too large (max 2MB per file)" });
+                    }
+
                     media.push({
                         data: Buffer.from(base64Data, 'base64'),
                         contentType: file.type || 'application/octet-stream',
                         filename: file.name
                     });
                 }
-            });
+            }
         }
 
         const journalReport = await journalReportModel.create({
@@ -72,8 +80,7 @@ async function generateJournalReportController(req, res) {
 
         console.error("Journal Report Error:", error);
         res.status(500).json({
-            message: "Failed to generate journal report",
-            error: error.message,
+            message: "Failed to generate journal report"
         });
     }
 }
@@ -84,7 +91,7 @@ async function generateJournalReportController(req, res) {
 async function getJournalEntriesController(req, res) {
     try {
         /* Fetch only entries for the logged-in user */
-        const entries = await journalReportModel.find({ userId: req.user.Id }).sort({ date: -1 });
+        const entries = await journalReportModel.find({ userId: req.user.Id }).select('-media').sort({ date: -1 });
 
         res.status(200).json({
             message: "Journal entries retrieved successfully",
@@ -93,8 +100,7 @@ async function getJournalEntriesController(req, res) {
     } catch (error) {
         console.error("Fetch Journal Entries Error:", error);
         res.status(500).json({
-            message: "Failed to fetch journal entries",
-            error: error.message,
+            message: "Failed to fetch journal entries"
         });
     }
 }
@@ -124,8 +130,7 @@ async function getUserStatsController(req, res) {
     } catch (error) {
         console.error("Fetch User Stats Error:", error);
         res.status(500).json({
-            message: "Failed to fetch user stats",
-            error: error.message,
+            message: "Failed to fetch user stats"
         });
     }
 }
@@ -173,7 +178,7 @@ async function getGlobalInsightsController(req, res) {
 
         // 3. Prepare text for AI
         const entriesText = filteredEntries.map((en, i) => {
-            return `Entry ${i+1} (${en.date.toDateString()}):\nTitle: ${en.title}\nContent: ${en.chat}\nReflections: ${en.reflection.join(', ')}`;
+            return `Entry ${i+1} (${en.date.toDateString()}):\nTitle: ${sanitizeForPrompt(en.title)}\nContent: ${sanitizeForPrompt(en.chat)}\nReflections: ${en.reflection.join(', ')}`;
         }).join('\n\n---\n\n');
 
         // 4. Generate New Insights
@@ -197,8 +202,7 @@ async function getGlobalInsightsController(req, res) {
     } catch (error) {
         console.error("Global Insights Error:", error);
         res.status(500).json({
-            message: "Failed to generate insights",
-            error: error.message
+            message: "Failed to generate insights"
         });
     }
 }
@@ -220,7 +224,7 @@ async function deleteJournalController(req, res) {
         res.status(200).json({ message: "Journal entry deleted successfully" });
     } catch (error) {
         console.error("Delete Journal Error:", error);
-        res.status(500).json({ message: "Failed to delete journal entry", error: error.message });
+        res.status(500).json({ message: "Failed to delete journal entry" });
     }
 }
 
@@ -278,7 +282,7 @@ async function modifyJournalController(req, res) {
 
     } catch (error) {
         console.error("Modify Journal Error:", error);
-        res.status(500).json({ message: "Failed to modify journal entry", error: error.message });
+        res.status(500).json({ message: "Failed to modify journal entry" });
     }
 }
 

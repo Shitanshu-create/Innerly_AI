@@ -22,16 +22,14 @@ async function chatWithAI(req, res) {
         res.status(200).json({
             message: "Chat response generated successfully",
             response: {
-                paragraphs: result.paragraphs || [],
-                highlight: result.highlight ?? 0,
+                text: result.response || "",
                 followUpSuggestions: result.followUpSuggestions || []
             }
         });
     } catch (error) {
         console.error("Chat Error:", error);
         res.status(500).json({
-            message: "Failed to generate chat response",
-            error: error.message,
+            message: "Failed to generate chat response"
         });
     }
 }

@@ -5,17 +5,20 @@ const toDayKey = (date) => new Date(date).toISOString().split("T")[0];
 
 const scoreAverage = (entry) => {
     const scores = entry.gemini_response || {};
+    // Positive emotions: calmness, productivity, happiness — higher is better
+    // Negative emotions: anxious, sadness — invert (100 - score) so that LOW anxiety/sadness = HIGH wellness
     return (
         (scores.calmness_score || 0)
-        + (scores.anxious_score || 0)
+        + (100 - (scores.anxious_score || 0))
         + (scores.productivity_score || 0)
-        + (scores.sadness_score || 0)
+        + (100 - (scores.sadness_score || 0))
         + (scores.happiness_score || 0)
     ) / 5;
 };
 
+
 async function recalculateUserStats(userId) {
-    const entries = await journalReportModel.find({ userId }).sort({ date: 1 });
+    const entries = await journalReportModel.find({ userId }).select('date chat gemini_response').sort({ date: 1 });
 
     if (entries.length === 0) {
         await UserStats.findOneAndUpdate(

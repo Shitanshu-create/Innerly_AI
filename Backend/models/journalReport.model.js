@@ -73,6 +73,8 @@ const journalReportSchema = new mongoose.Schema({
 
 
 
+journalReportSchema.index({ userId: 1, date: -1 });
+
 const JournalReport = mongoose.model("JournalReport", journalReportSchema);
 
 export default JournalReport;

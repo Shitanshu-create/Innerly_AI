@@ -1,27 +1,32 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import journalReportModel from "../models/journalReport.model.js";
 import env from "../config/env.js";
+import { sanitizeForPrompt } from "../utils/sanitize.js";
+
+function safeParseGeminiResponse(text) {
+    try {
+        return JSON.parse(text);
+    } catch (err) {
+        console.error("Gemini returned invalid JSON:", text?.slice(0, 500));
+        throw new Error("AI service returned an invalid response. Please try again.");
+    }
+}
 
 /* ── Response schema for structured chat replies ── */
 const chatResponseSchema = {
     type: Type.OBJECT,
     properties: {
-        paragraphs: {
-            type: Type.ARRAY,
-            description: "2-4 paragraphs of the AI's response. Each paragraph should be a thoughtful, warm, and insightful response.",
-            items: { type: Type.STRING }
-        },
-        highlight: {
-            type: Type.NUMBER,
-            description: "The 0-based index of the paragraph that is the most important or insightful to visually emphasise."
+        response: {
+            type: Type.STRING,
+            description: "A single, concise response paragraph. Keep it warm, insightful, and brief — 2-4 sentences maximum."
         },
         followUpSuggestions: {
             type: Type.ARRAY,
-            description: "3-4 short follow-up questions the user might want to ask next, based on the conversation context.",
+            description: "3-4 short follow-up questions the user might want to ask next. These MUST be highly relevant to the user's emotion, feelings, behaviours, and past activities as found in the conversation context and their journal entries.",
             items: { type: Type.STRING }
         }
     },
-    required: ["paragraphs", "highlight", "followUpSuggestions"]
+    required: ["response", "followUpSuggestions"]
 };
 
 /**
@@ -56,10 +61,10 @@ function buildJournalContext(entries) {
 
             return `--- Entry ${idx + 1} ---
 Date: ${date}
-Title: ${entry.title}
+Title: ${sanitizeForPrompt(entry.title)}
 Mood Scores: ${moodStr}
 Key Reflections: ${reflections}
-Full Text: ${entry.chat}`;
+Full Text: ${sanitizeForPrompt(entry.chat)}`;
         });
 
     if (summaries.length === 0) {
@@ -119,14 +124,14 @@ ${journalContext}`;
     /* Add previous conversation turns */
     for (const msg of conversationHistory) {
         if (msg.role === 'user') {
-            fullPrompt += `User: ${msg.text}\n\n`;
+            fullPrompt += `User: ${sanitizeForPrompt(msg.text)}\n\n`;
         } else {
-            fullPrompt += `Innerly: ${msg.text}\n\n`;
+            fullPrompt += `Innerly: ${sanitizeForPrompt(msg.text)}\n\n`;
         }
     }
 
     /* Add the current user message */
-    fullPrompt += `User: ${message}\n\nNow respond as Innerly to the user's latest message above.`;
+    fullPrompt += `User: ${sanitizeForPrompt(message)}\n\nNow respond as Innerly to the user's latest message above.`;
 
     const response = await ai.models.generateContent({
         model: env.geminiModel,
@@ -137,7 +142,7 @@ ${journalContext}`;
         }
     });
 
-    const result = JSON.parse(response.text);
+    const result = safeParseGeminiResponse(response.text);
     return result;
 }
 

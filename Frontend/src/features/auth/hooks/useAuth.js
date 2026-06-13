@@ -10,6 +10,7 @@ export const useAuth = () => {
         try {
             const res = await login({ email, password });
             if (res.success && res.user) {
+                sessionStorage.clear();
                 setUser(res.user);
                 fetchObservations().catch(err => console.error("Prefetch failed", err));
                 return { success: true };
@@ -39,6 +40,7 @@ export const useAuth = () => {
     const handleLogout = async () => {
         try {
             await logout();
+            sessionStorage.clear();
             setUser(null);
             return { success: true };
         } catch (err) {

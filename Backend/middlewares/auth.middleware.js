@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import tokenBlacklistModel from "../models/blacklist.model.js";
 import env from "../config/env.js";
+import crypto from "crypto";
 
 
 async function authUser(req, res, next) {
@@ -13,7 +14,8 @@ async function authUser(req, res, next) {
             );
         }
 
-        const isTokenBlacklisted = await tokenBlacklistModel.findOne({ token });
+        const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+        const isTokenBlacklisted = await tokenBlacklistModel.findOne({ token: tokenHash });
 
         if (isTokenBlacklisted) {
             return res.status(401).json(

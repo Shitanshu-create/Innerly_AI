@@ -37,11 +37,12 @@ const env = {
     mongoUri: requiredEnv.MONGO_URI,
     jwtSecret: requiredEnv.JWT_SECRET,
     corsOrigin: process.env.CORS_ORIGIN || "http://localhost:5173",
-    jsonLimit: process.env.JSON_LIMIT || "50mb",
+    jsonLimit: process.env.JSON_LIMIT || "10mb",
     rateLimit: {
         windowMs: parseInteger(process.env.RATE_LIMIT_WINDOW_MS, 15 * 60 * 1000),
         max: parseInteger(process.env.RATE_LIMIT_MAX, 300)
     },
+    backendUrl: process.env.BACKEND_URL || `http://localhost:${parseInteger(process.env.PORT, 3000)}`,
     cookie: {
         secure: parseBoolean(process.env.COOKIE_SECURE, process.env.NODE_ENV === "production"),
         sameSite: process.env.COOKIE_SAME_SITE || "Lax",
@@ -49,7 +50,11 @@ const env = {
     },
     csrfCookieName: process.env.CSRF_COOKIE_NAME || "_csrf",
     googleGenAiApiKey: requiredEnv.GOOGLE_GENAI_API_KEY,
-    geminiModel: process.env.GEMINI_MODEL || "gemini-3.1-flash-lite-preview"
+    geminiModel: process.env.GEMINI_MODEL || "gemini-3.1-flash-lite-preview",
+    googleClientId: process.env.GOOGLE_CLIENT_ID || "",
+    googleClientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+    githubClientId: process.env.GITHUB_CLIENT_ID || "",
+    githubClientSecret: process.env.GITHUB_CLIENT_SECRET || ""
 };
 
 export default env;

@@ -54,8 +54,14 @@ function WritingPage({
   const [sidebarOpen, setSidebarOpen] = useState(() => {
     return false;
   });
-  const [title, setTitle] = useState('');
-  const [journalText, setJournalText] = useState('');
+  const [title, setTitle] = useState(() => {
+    if (!selectedEntryId) return sessionStorage.getItem('unsaved_journal_title') || '';
+    return '';
+  });
+  const [journalText, setJournalText] = useState(() => {
+    if (!selectedEntryId) return sessionStorage.getItem('unsaved_journal_content') || '';
+    return '';
+  });
   const [aiEnabled, setAiEnabled] = useState(true);
   const [media, setMedia] = useState(null);
   const [saveStatus, setSaveStatus] = useState({
@@ -83,7 +89,7 @@ function WritingPage({
       Highlight.configure({ multicolor: false })
     ],
     immediatelyRender: false,
-    content: '',
+    content: !selectedEntryId ? (sessionStorage.getItem('unsaved_journal_content') || '') : '',
     editorProps: {
       attributes: {
         'aria-label': 'Write journal entry',
@@ -139,12 +145,22 @@ function WritingPage({
         }
       }
     } else {
-      setTitle('');
-      setJournalText('');
-      editor?.commands?.setContent('');
+      const savedTitle = sessionStorage.getItem('unsaved_journal_title') || '';
+      const savedContent = sessionStorage.getItem('unsaved_journal_content') || '';
+      setTitle(savedTitle);
+      setJournalText(savedContent);
+      editor?.commands?.setContent(savedContent);
       setMedia(null);
     }
   }, [selectedEntryId, entries, editorReady, editor]);
+
+  // * Cache draft data for unsaved entries
+  useEffect(() => {
+    if (!selectedEntryId) {
+      sessionStorage.setItem('unsaved_journal_title', title);
+      sessionStorage.setItem('unsaved_journal_content', journalText);
+    }
+  }, [title, journalText, selectedEntryId]);
 
   const clearActionStatus = () => {
     setSaveStatus({ loading: false, error: null, success: false, message: null });
@@ -199,6 +215,8 @@ function WritingPage({
         setEntries((current) => [formatted, ...current]);
         setSelectedEntryId(formatted.id);
         setSaveStatus({ loading: false, error: null, success: true, message: 'Saved' });
+        sessionStorage.removeItem('unsaved_journal_title');
+        sessionStorage.removeItem('unsaved_journal_content');
       }
     } catch (err) {
       console.error("Failed to save entry:", err);
@@ -239,6 +257,10 @@ function WritingPage({
 
   const startNewEntry = () => {
     clearActionStatus();
+    sessionStorage.removeItem('unsaved_journal_title');
+    sessionStorage.removeItem('unsaved_journal_content');
+    setTitle('');
+    editor?.commands?.setContent('');
     setSelectedEntryId(null);
   };
 
@@ -274,7 +296,11 @@ function WritingPage({
           panelOpen={sidebarOpen}
           onTogglePanel={() => setSidebarOpen((value) => !value)}
           onNewEntry={startNewEntry}
-          onOpenWriting={undefined}
+          onOpenWriting={() => {
+            if (selectedEntryId) {
+              setSelectedEntryId(null);
+            }
+          }}
           onOpenChat={onOpenChat}
           onOpenAnalytics={onOpenAnalytics}
           onLogout={onLogout}
@@ -284,6 +310,7 @@ function WritingPage({
           open={sidebarOpen}
           entries={entries}
           onSelectEntry={selectEntry}
+          onClose={() => setSidebarOpen(false)}
         />
 
         <section className={`writing-section ${sidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>

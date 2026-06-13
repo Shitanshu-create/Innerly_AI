@@ -6,6 +6,7 @@ import { useAuth } from './features/auth/hooks/useAuth.js';
 import { fetchEntries, fetchObservations } from './features/ai-chat/services/journal.api.js';
 import LandingPage from './pages/LandingPage.jsx';
 import { formatEntry } from './shared/utils/formatEntry.js';
+import { WelcomePopup } from './shared/components/WelcomePopup.jsx';
 
 const AnalyticsPage = lazy(() => import('./features/analytics/pages/AnalyticsPage.jsx'));
 const ChatPage = lazy(() => import('./features/ai-chat/pages/ChatPage.jsx'));
@@ -147,6 +148,7 @@ function App() {
           />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        <WelcomePopup />
       </Suspense>
     </ErrorBoundary>
   );

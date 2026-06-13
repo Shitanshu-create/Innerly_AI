@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import tokenBlacklistModel from "../models/blacklist.model.js";
 import env from "../config/env.js";
+import crypto from "crypto";
 
 const authCookieOptions = {
     httpOnly: true,
@@ -104,6 +105,12 @@ async function loginUserController(req, res, next) {
             );
         }
 
+        if (!user.passwordHash) {
+            return res.status(401).json({
+                message: `This account uses ${user.provider} login. Please sign in with ${user.provider}.`
+            });
+        }
+
         const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
 
         if (!isPasswordValid) {
@@ -143,7 +150,8 @@ async function logoutUserController(req, res, next) {
         const token = req.cookies.token;
 
         if (token) {
-            await tokenBlacklistModel.create({ token });
+            const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+            await tokenBlacklistModel.create({ token: tokenHash });
         }
 
         res.clearCookie("token", {

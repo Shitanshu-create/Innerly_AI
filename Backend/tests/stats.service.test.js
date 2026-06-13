@@ -31,22 +31,22 @@ describe("stats recalculation", () => {
                 date: yesterday,
                 chat: "one two",
                 gemini_response: {
-                    calmness_score: 10,
-                    anxious_score: 0,
-                    productivity_score: 10,
-                    sadness_score: 0,
-                    happiness_score: 10
+                    calmness_score: 60,
+                    anxious_score: 20,
+                    productivity_score: 70,
+                    sadness_score: 15,
+                    happiness_score: 65
                 }
             },
             {
                 date: today,
                 chat: "three four five",
                 gemini_response: {
-                    calmness_score: 5,
-                    anxious_score: 5,
-                    productivity_score: 5,
-                    sadness_score: 5,
-                    happiness_score: 5
+                    calmness_score: 50,
+                    anxious_score: 30,
+                    productivity_score: 55,
+                    sadness_score: 25,
+                    happiness_score: 50
                 }
             }
         ]);
@@ -54,6 +54,9 @@ describe("stats recalculation", () => {
         await recalculateUserStats(userId);
 
         expect(find).toHaveBeenCalledWith({ userId });
+        // entry1: (60 + (100-20) + 70 + (100-15) + 65) / 5 = (60+80+70+85+65)/5 = 360/5 = 72
+        // entry2: (50 + (100-30) + 55 + (100-25) + 50) / 5 = (50+70+55+75+50)/5 = 300/5 = 60
+        // avgMoodScore = (72 + 60) / 2 = 66
         expect(findOneAndUpdate).toHaveBeenCalledWith(
             { userId },
             expect.objectContaining({
@@ -61,7 +64,7 @@ describe("stats recalculation", () => {
                 totalWords: 5,
                 longestStreak: 2,
                 currentStreak: 2,
-                avgMoodScore: 5.5
+                avgMoodScore: 66
             }),
             { upsert: true, returnDocument: "after" }
         );

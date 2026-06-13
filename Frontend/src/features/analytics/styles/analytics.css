@@ -36,6 +36,12 @@
   transition: margin 300ms ease;
 }
 
+@media (max-width: 499px) {
+  .analytics-section {
+    padding-bottom: calc(5.75rem + env(safe-area-inset-bottom));
+  }
+}
+
 @media (min-width: 768px) {
   .analytics-section.sidebar-open {
     margin-left: 260px;
@@ -381,12 +387,13 @@
 }
 
 .streak-heatmap .day-today {
-  background-color: var(--color-accent);
-  box-shadow: 0 0 10px color-mix(in srgb, var(--color-accent) 45%, transparent);
+  background-color: var(--color-surface-hover);
+  border: 2px dashed color-mix(in srgb, var(--color-accent) 60%, transparent);
 }
 
 .streak-heatmap .day-filled {
-  background-color: color-mix(in srgb, var(--color-accent) 45%, transparent);
+  background-color: var(--color-accent);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--color-accent) 55%, transparent);
 }
 
 .streak-heatmap .day-empty {
@@ -670,11 +677,12 @@
 .analytics-empty-state {
   margin-top: 1rem 0 ;
   border-radius: 1rem;
-  background-color: var(--color-surface);
+  background-color: var(--color-surface-strong);
   padding: 1rem;
   color: var(--color-text-muted);
   font-size: 0.875rem;
   line-height: 1.6;
+  border: 1px solid var(--color-border);
 }
 
 .advice-card {
@@ -901,6 +909,7 @@
   border: 1px solid var(--color-border);
   cursor: pointer;
   transition: background-color 150ms ease;
+  font-weight: 550;
 }
 
 .theme-btn:hover {
