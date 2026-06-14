@@ -65,6 +65,8 @@ app.use(rateLimit({
 app.use(cookieParser());
 app.use(express.json({ limit: env.jsonLimit }));
 
+app.get("/api/health", (req, res) => res.status(200).send("OK"));
+
 // OAuth routes mounted BEFORE CSRF (provider callbacks don't carry CSRF tokens)
 app.use("/api/auth", oauthRouter);
 
