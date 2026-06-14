@@ -2,7 +2,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const findOneAndUpdate = vi.fn();
 const sort = vi.fn();
-const find = vi.fn(() => ({ sort }));
+const select = vi.fn(() => ({ sort }));
+const find = vi.fn(() => ({ select }));
+
 
 vi.mock("../models/journalReport.model.js", () => ({
     default: { find }

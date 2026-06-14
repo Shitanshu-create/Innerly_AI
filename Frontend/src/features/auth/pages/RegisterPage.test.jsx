@@ -22,7 +22,7 @@ describe('Register flow', () => {
     fireEvent.change(screen.getByPlaceholderText('Your name'), {
       target: { value: 'Ada' }
     });
-    fireEvent.change(screen.getByPlaceholderText('you@innerly.app'), {
+    fireEvent.change(screen.getByPlaceholderText('you@innerly.com'), {
       target: { value: 'ada@example.com' }
     });
     fireEvent.change(screen.getByPlaceholderText('********'), {
@@ -52,7 +52,7 @@ describe('Register flow', () => {
     fireEvent.change(screen.getByPlaceholderText('Your name'), {
       target: { value: 'Ada' }
     });
-    fireEvent.change(screen.getByPlaceholderText('you@innerly.app'), {
+    fireEvent.change(screen.getByPlaceholderText('you@innerly.com'), {
       target: { value: 'ada@example.com' }
     });
     fireEvent.change(screen.getByPlaceholderText('********'), {

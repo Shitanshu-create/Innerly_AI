@@ -19,7 +19,7 @@ describe('Login flow', () => {
 
     render(<Login onBack={vi.fn()} onOpenRegister={vi.fn()} onLoginSuccess={onLoginSuccess} />);
 
-    fireEvent.change(screen.getByPlaceholderText('you@innerly.app'), {
+    fireEvent.change(screen.getByPlaceholderText('you@innerly.com'), {
       target: { value: 'ada@example.com' }
     });
     fireEvent.change(screen.getByPlaceholderText('********'), {
@@ -38,7 +38,7 @@ describe('Login flow', () => {
     handleLogin.mockResolvedValueOnce({ success: false, message: 'Invalid login' });
 
     render(<Login onBack={vi.fn()} onOpenRegister={vi.fn()} onLoginSuccess={vi.fn()} />);
-    fireEvent.change(screen.getByPlaceholderText('you@innerly.app'), {
+    fireEvent.change(screen.getByPlaceholderText('you@innerly.com'), {
       target: { value: 'ada@example.com' }
     });
     fireEvent.change(screen.getByPlaceholderText('********'), {
@@ -51,7 +51,7 @@ describe('Login flow', () => {
 
   it('warns and does not submit invalid email format', async () => {
     render(<Login onBack={vi.fn()} onOpenRegister={vi.fn()} onLoginSuccess={vi.fn()} />);
-    fireEvent.change(screen.getByPlaceholderText('you@innerly.app'), {
+    fireEvent.change(screen.getByPlaceholderText('you@innerly.com'), {
       target: { value: 'bad-email' }
     });
     fireEvent.change(screen.getByPlaceholderText('********'), {
