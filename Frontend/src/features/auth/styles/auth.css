@@ -102,7 +102,7 @@
 }
 
 .auth-subtitle {
-  font-family: "Innerly Hand", "Comic Sans MS", "Bradley Hand", cursive;
+  font-family: var(--font-handwriting);
   font-size: 1.125rem;
   font-weight: 700;
   color: var(--color-accent-strong);

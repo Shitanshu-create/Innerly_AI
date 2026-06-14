@@ -637,7 +637,7 @@
 .obs-text {
   margin-top: 0.75rem;
   margin-bottom: 0;
-  font-family: "Innerly Hand", "Comic Sans MS", "Bradley Hand", cursive;
+  font-family: var(--font-handwriting);
   font-size: 1.125rem;
   line-height: 1.625;
   color: var(--color-text-muted);
@@ -982,7 +982,7 @@
 }
 
 .footer-quote {
-  font-family: "Innerly Hand", "Comic Sans MS", "Bradley Hand", cursive;
+  font-family: var(--font-handwriting);
   font-size: 1.125rem;
   font-style: italic;
   color: var(--color-text-muted);

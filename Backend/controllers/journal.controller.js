@@ -91,7 +91,7 @@ async function generateJournalReportController(req, res) {
 async function getJournalEntriesController(req, res) {
     try {
         /* Fetch only entries for the logged-in user */
-        const entries = await journalReportModel.find({ userId: req.user.Id }).select('-media').sort({ date: -1 });
+        const entries = await journalReportModel.find({ userId: req.user.Id }).sort({ date: -1 });
 
         res.status(200).json({
             message: "Journal entries retrieved successfully",

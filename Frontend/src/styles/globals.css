@@ -1,3 +1,12 @@
+@font-face {
+  font-family: "ComicSansMS";
+  src: url("../assets/fonts/ComicSans.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+
+
 :root {
   --color-bg: #101010;
   --color-bg-grid: #f9f9f6;
@@ -28,6 +37,7 @@
   --radius-panel: 1rem;
   --radius-control: 9999px;
   --shadow-panel: 0 18px 45px var(--color-shadow);
+  --font-handwriting: "ComicSansMS", sans-serif ;
   color: var(--color-ink);
   background: var(--color-bg-grid);
   font-synthesis: none;
@@ -414,7 +424,7 @@ a {
   border: 3px solid #050505;
   background-color: #25D366;
   padding: 0.375rem 0.75rem;
-  font-family: "Innerly Hand", "Comic Sans MS", "Bradley Hand", cursive;
+  font-family: var(--font-handwriting);
   font-size: 0.875rem;
   line-height: 1.25rem;
   font-weight: 700;
@@ -581,7 +591,7 @@ a {
 }
 
 .journal-card-title {
-  font-family: "Innerly Hand", "Comic Sans MS", "Bradley Hand", cursive;
+  font-family: var(--font-handwriting);
   font-size: 1.125rem;
   font-weight: 700;
   margin: 0;
@@ -631,7 +641,7 @@ a {
 }
 
 .journal-card-quote {
-  font-family: "Innerly Hand", "Comic Sans MS", "Bradley Hand", cursive;
+  font-family: var(--font-handwriting);
   font-size: 1.125rem;
   line-height: 1.375;
   margin: 0;
@@ -741,7 +751,7 @@ a {
 }
 
 .section-kicker {
-  font-family: "Innerly Hand", "Comic Sans MS", "Bradley Hand", cursive;
+  font-family: var(--font-handwriting);
   font-size: 1.25rem;
   font-weight: 700;
   margin: 0;
@@ -883,7 +893,7 @@ a {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  font-family: "Innerly Hand", "Comic Sans MS", "Bradley Hand", cursive;
+  font-family: var(--font-handwriting);
   font-size: 1.125rem;
   font-weight: 700;
   transition: color 360ms ease, left 520ms cubic-bezier(0.22, 1, 0.36, 1), right 520ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -904,7 +914,7 @@ a {
 
 .vault-status {
   margin-top: 1rem;
-  font-family: "Innerly Hand", "Comic Sans MS", "Bradley Hand", cursive;
+  font-family: var(--font-handwriting);
   font-size: 1.25rem;
   font-weight: 700;
   transition: color 360ms ease;
@@ -960,7 +970,7 @@ a {
   border: 3px solid var(--color-ink);
   background-color: var(--color-surface);
   padding: 0.25rem 0.75rem;
-  font-family: "Innerly Hand", "Comic Sans MS", "Bradley Hand", cursive;
+  font-family: var(--font-handwriting);
   font-size: 1rem;
   font-weight: 700;
   transition: background-color 360ms ease, color 360ms ease;
@@ -1313,7 +1323,7 @@ a {
 
 .vault-subtitle {
   margin-top: 0.25rem;
-  font-family: "Innerly Hand", "Comic Sans MS", "Bradley Hand", cursive;
+  font-family: var(--font-handwriting);
   font-size: 1.875rem;
   font-weight: 700;
   line-height: 1.25;
@@ -1402,7 +1412,7 @@ a {
 }
 
 .testimonials-title span {
-  font-family: "Innerly Hand", "Comic Sans MS", "Bradley Hand", cursive;
+  font-family: var(--font-handwriting);
   color: #2458FF;
 }
 
@@ -1421,7 +1431,7 @@ a {
 }
 
 .testimonial-quote {
-  font-family: "Innerly Hand", "Comic Sans MS", "Bradley Hand", cursive;
+  font-family: var(--font-handwriting);
   font-size: 1.125rem;
   font-weight: 700;
   line-height: 1.375;
@@ -1554,7 +1564,7 @@ a {
 }
 
 .landing-footer-copy {
-  font-family: "Innerly Hand", "Comic Sans MS", "Bradley Hand", cursive;
+  font-family: var(--font-handwriting);
   font-size: 1.125rem;
   font-weight: 700;
   margin: 0;
