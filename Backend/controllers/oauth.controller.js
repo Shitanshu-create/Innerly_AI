@@ -72,7 +72,7 @@ function redirectToGoogle(req, res) {
 
     const params = new URLSearchParams({
         client_id: env.googleClientId,
-        redirect_uri: `${env.backendUrl}/api/auth/google/callback`,
+        redirect_uri: `${env.corsOrigin}/api/auth/google/callback`,
         response_type: "code",
         scope: "openid email profile",
         access_type: "offline",
@@ -124,7 +124,7 @@ function redirectToGithub(req, res) {
 
     const params = new URLSearchParams({
         client_id: env.githubClientId,
-        redirect_uri: `${env.backendUrl}/api/auth/github/callback`,
+        redirect_uri: `${env.corsOrigin}/api/auth/github/callback`,
         scope: "user:email",
         state
     });

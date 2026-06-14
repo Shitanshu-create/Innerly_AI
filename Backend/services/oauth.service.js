@@ -11,7 +11,7 @@ async function exchangeGoogleCode(code) {
             code,
             client_id: env.googleClientId,
             client_secret: env.googleClientSecret,
-            redirect_uri: `${env.backendUrl}/api/auth/google/callback`,
+            redirect_uri: `${env.corsOrigin}/api/auth/google/callback`,
             grant_type: "authorization_code"
         })
     });
