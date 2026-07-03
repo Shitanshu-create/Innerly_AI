@@ -34,6 +34,7 @@
   --color-mint: #8FF0D2;
   --color-coral: #FFB088;
   --color-ink: #050505;
+  --color-focus: #00d882;
   --radius-panel: 1rem;
   --radius-control: 9999px;
   --shadow-panel: 0 18px 45px var(--color-shadow);
@@ -74,6 +75,7 @@
   --color-purple: #6528bb;
   --color-mint: #177E66;
   --color-coral: #B8572F;
+  --color-focus: #0065d8;
 }
 
 *,

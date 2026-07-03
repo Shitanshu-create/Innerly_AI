@@ -154,7 +154,7 @@
 }
 
 .writing-title-input:focus {
-  color: var(--color-warning);
+  color: var(--color-focus);
 }
 
 @media (min-width: 640px) {

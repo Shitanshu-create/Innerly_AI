@@ -110,6 +110,13 @@ CSRF_COOKIE_NAME=_csrf
 
 # Frontend
 VITE_API_BASE_URL=http://localhost:3000
+
+
+# OAuth (leave empty to disable)
+GOOGLE_CLIENT_ID= Your google cloud client id
+GOOGLE_CLIENT_SECRET= Your google cloud client secret
+GITHUB_CLIENT_ID= Your github client id
+GITHUB_CLIENT_SECRET= Your github client secret
 ```
 
 ### 3. Install & run the Backend
@@ -163,5 +170,5 @@ Contributions are welcome! Please open an issue first to discuss what you would 
 ---
 
 <p align="center">
-  Built with ❤️ by <strong>Team Rocket</strong>
+  Built with ❤️ by <strong>Team Rocket</strong> for Hacknovate 7.0
 </p>
